@@ -1,24 +1,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>SIRS</groupId>
-  <artifactId>ServerMedicalRecords</artifactId>
+  <artifactId>WorkStation</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>${project.artifactId}</name>
+  <name>WorkStation</name>
+  <url>http://maven.apache.org</url>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mainclass>SIRS.WorkStation.App</mainclass>
 
+    <uddi.url>http://192.168.1.4:8080</uddi.url>
+    <ws.name>Server</ws.name>
+
+    <ws.url>http://192.168.1.4:8081/server-ws/endpoint</ws.url>
+    <wsdl.url>${ws.url}?WSDL</wsdl.url>
+  </properties>
 
   <dependencies>
-  	 <!-- JAX-R API -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+     <!-- JAX-R API -->
     <dependency>
       <groupId>javax.xml.registry</groupId>
       <artifactId>javax.xml.registry-api</artifactId>
       <version>1.0.5</version>
     </dependency>
-     <!-- UDDI Web Services -->
+    <!-- UDDI Web Services -->
     <dependency>
       <groupId>org.apache.juddi</groupId>
       <artifactId>uddi-ws</artifactId>
@@ -81,24 +98,34 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  
-   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mainclass>SIRS.ws.ServerMain</mainclass>
-    <uddi.url>http://192.168.1.4:8080</uddi.url>
-    <ws.name>Server</ws.name>
-    <ws.url>http://192.168.1.4:8081/server-ws/endpoint</ws.url>
-  </properties>
-
-  <build>
+   <build>
     <plugins>
+      <plugin>
+        <groupId>org.jvnet.jax-ws-commons</groupId>
+        <artifactId>jaxws-maven-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wsimport</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
+          <wsdlUrls>
+            <wsdlUrl>${wsdl.url}</wsdlUrl>
+          </wsdlUrls>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-tools</artifactId>
+            <version>2.2.10</version>
+          </dependency>
+        </dependencies>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -116,7 +143,6 @@
           <arguments>
             <argument>${uddi.url}</argument>
             <argument>${ws.name}</argument>
-            <argument>${ws.url}</argument>
           </arguments>
         </configuration>
       </plugin>
@@ -128,11 +154,12 @@
           <programs>
             <program>
               <mainClass>${mainclass}</mainClass>
-              <id>server-ws</id>
+              <id>WorkStation-ws-cli</id>
             </program>
           </programs>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  
 </project>

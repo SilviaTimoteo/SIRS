@@ -1,16 +1,16 @@
 package SIRS.ws;
 
-import javax.xml.registry.JAXRException;
 import javax.xml.ws.Endpoint;
 
 import SIRS.ws.uddi.UDDINaming;
 
-public class ServerMain {
-	public static void main(String[] args) throws JAXRException {
-        // Check arguments
-        if (args.length < 3) {
+public class ServerDBMain {
+	
+	public static void main(String[] args) {
+	 // Check arguments
+	  if (args.length < 3) {
             System.err.println("Argument(s) missing!");
-            System.err.printf("Usage: java %s uddiURL wsName wsURL%n", ServerMain.class.getName());
+            System.err.printf("Usage: java %s uddiURL wsName wsURL%n", ServerDBMain.class.getName());
             return;
         }
 
@@ -21,7 +21,7 @@ public class ServerMain {
         Endpoint endpoint = null;
         SIRS.ws.uddi.UDDINaming uddiNaming = null;
         try {
-            endpoint = Endpoint.create(new ServerImpl());
+            endpoint = Endpoint.create(new ServerImplDB());
 
             // publish endpoint
             System.out.printf("Starting %s%n", url);
@@ -35,29 +35,6 @@ public class ServerMain {
             // wait
             System.out.println("Awaiting connections");
             System.out.println("Press enter to shutdown");
-            //SERVERDB CONNECTION
-            if (args.length < 2) {
-                System.err.println("Argument(s) missing!");
-                System.err.printf("Usage: java %s uddiURL name%n", ServerMain.class.getName());
-                return;
-            }
-
-            String uddiURLDB = args[3];
-            String nameDB = args[4];
-
-            System.out.printf("Contacting UDDI at %s%n", uddiURL);
-            UDDINaming uddiNamingDB = new UDDINaming(uddiURL);
-
-            System.out.printf("Looking for '%s'%n", nameDB);
-            String endpointAddress = uddiNamingDB.lookup(nameDB);
-
-            if (endpointAddress == null) {
-                System.out.println("Not found!");
-                return;
-            } else {
-                System.out.printf("Found %s%n", endpointAddress);
-              
-    	    }
             System.in.read();
 
         } catch (Exception e) {
@@ -84,8 +61,6 @@ public class ServerMain {
                 System.out.printf("Caught exception when deleting: %s%n", e);
             }
         }
-        
-      
 
-    }
+	}
 }

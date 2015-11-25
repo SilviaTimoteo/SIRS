@@ -32,8 +32,7 @@ public class App
             return;
         } else {
             System.out.printf("Found %s%n", endpointAddress);
-      
-    
+          
 	    }
     }
 }

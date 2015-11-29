@@ -11,8 +11,12 @@ public class AskMR {
 	boolean noBack = true;
 	String data = null;
 	Scanner input = new Scanner(System.in);
-	
 	SecondaryFunctions functions = new SecondaryFunctions();
+	String user;
+	
+	public AskMR(String username){
+		user = username;
+	}
 	
 	public boolean showOptions(){ 
 			functions.writeToScreen("\n [Pedido de Registo]\n\n");
@@ -71,7 +75,7 @@ public class AskMR {
 
 			 		functions.writeToScreen("\n  [Depois da data X]\n\n");
 					while(data==null){
-				 		functions.writeToScreen("Insira a data (dd/MM/aaaa):\n");
+				 		functions.writeToScreen("Insira a data (dd/MM/aaaa): ");
 						data = functions.getDate();
 					}
 				 	functions.writeToScreen("Nome do paciente: ");

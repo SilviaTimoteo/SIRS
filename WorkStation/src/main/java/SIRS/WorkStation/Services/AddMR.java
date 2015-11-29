@@ -1,6 +1,14 @@
 package SIRS.WorkStation.Services;
 
+import java.io.IOException;
 import java.util.Scanner;
+
+import org.jdom2.Document;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import SIRS.CryptoTools.FunctionsXML;
+import SIRS.CryptoTools.RequestsXML;
 
 public class AddMR {
 
@@ -11,10 +19,16 @@ public class AddMR {
 	int speciality = -1;
 	boolean invalid = true;
 	String op;
+	RequestsXML request = new RequestsXML();
+	Document rDoc = null;
+	String user;
 	
+	public AddMR(String username){
+		user = username;
+	}
 	
-	public boolean showOptions(){
-
+	public boolean showOptions() {
+		
 		functions.writeToScreen("\n\n  [Adição de registo]\n\n");
 		while(speciality == -1){
 	 		speciality = functions.showSpecialities();
@@ -36,7 +50,42 @@ public class AddMR {
 				invalid = true;
 			}
 		}
-		if(op.equalsIgnoreCase("y")) functions.writeToScreen("ENVIADO\n");
+		if(op.equalsIgnoreCase("y")) {
+			functions.writeToScreen("ENVIADO\n");
+			rDoc = request.createDoc();
+			rDoc = request.setPatient(rDoc, patient);
+			rDoc = request.setDoctor(rDoc, user);
+			rDoc = request.setDate(rDoc, functions.getCurrentDate());
+			rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
+			rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
+			rDoc = request.setEntry(rDoc, entry);
+			//----------IMPRIMIR O DOC CRIADO, APAGAR DEPOIS ESTE CODIGO-------------------------//	    
+			XMLOutputter xmlOutput = new XMLOutputter();
+			xmlOutput.setFormat(Format.getPrettyFormat());
+	        try {
+				xmlOutput.output(rDoc, System.out);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			
+			
+			byte[] bdoc = (new FunctionsXML()).XMLtoBytes(rDoc);
+			functions.writeToScreen(String.valueOf(bdoc)+"\n");
+			
+			Document newDoc = (new FunctionsXML()).BytesToXML(bdoc);
+	        try {
+				xmlOutput.output(newDoc, System.out);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+
+	        
+	        
+	//-----------------------------------------------------------------------------------//
+			
+		}
 		else functions.writeToScreen("CANCELED\n");
 		return false;
 

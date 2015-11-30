@@ -1,7 +1,14 @@
 package SIRS.WorkStation.Services;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import org.jdom2.Document;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import SIRS.CryptoTools.RequestsXML;
 
 public class AskMR {
 
@@ -13,6 +20,8 @@ public class AskMR {
 	Scanner input = new Scanner(System.in);
 	SecondaryFunctions functions = new SecondaryFunctions();
 	String user;
+	RequestsXML request = new RequestsXML();
+	Document rDoc = null;
 	
 	public AskMR(String username){
 		user = username;
@@ -40,6 +49,12 @@ public class AskMR {
 			 		functions.writeToScreen("\n  [Todos os registos]\n\n");
 			 		functions.writeToScreen("Nome do paciente: ");
 			 		patient = input.nextLine();
+			 		
+			 		rDoc = request.createDoc();
+					rDoc = request.setPatient(rDoc, patient);
+					rDoc = request.setDoctor(rDoc, user);
+					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
+			
 					functions.writeToScreen("\n Pedido Enviado\n\n");
 
 					break;
@@ -55,6 +70,14 @@ public class AskMR {
 			 		}
 				 	functions.writeToScreen("Nome do paciente: ");
 					patient = input.nextLine();
+					
+					rDoc = request.createDoc();
+					rDoc = request.setPatient(rDoc, patient);
+					rDoc = request.setDoctor(rDoc, user);
+					rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
+					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
+					
+					
 					functions.writeToScreen("\n Pedido Enviado\n\n");
 
 					break;
@@ -63,11 +86,19 @@ public class AskMR {
 
 			 		functions.writeToScreen("\n  [Antes da data X]\n\n");
 					while(data==null){
-			 		functions.writeToScreen("Insira a data (dd/MM/aaaa):\n");
-					data = functions.getDate();
+						functions.writeToScreen("Insira a data (dd/MM/aaaa):\n");
+						data = functions.getDate();
 					}
 				 	functions.writeToScreen("Nome do paciente: ");
 					patient = input.nextLine();
+					
+					rDoc = request.createDoc();
+					rDoc = request.setPatient(rDoc, patient);
+					rDoc = request.setDoctor(rDoc, user);
+					rDoc = request.setDate(rDoc, data);
+					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
+					rDoc = request.setBeforeAfter(rDoc, "B");
+					
 					functions.writeToScreen("\n Pedido Enviado\n\n");
 					break;
 			 	case 4:
@@ -80,6 +111,14 @@ public class AskMR {
 					}
 				 	functions.writeToScreen("Nome do paciente: ");
 					patient = input.nextLine();
+					
+					rDoc = request.createDoc();
+					rDoc = request.setPatient(rDoc, patient);
+					rDoc = request.setDoctor(rDoc, user);
+					rDoc = request.setDate(rDoc, data);
+					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
+					rDoc = request.setBeforeAfter(rDoc, "A");
+					
 					functions.writeToScreen("\n Pedido Enviado\n\n");
 					break;
 			 	case 0:
@@ -91,6 +130,16 @@ public class AskMR {
 					return true;
 			}
 		
+	//----------IMPRIMIR O DOC CRIADO, APAGAR DEPOIS ESTE CODIGO-------------------------//	    
+			XMLOutputter xmlOutput = new XMLOutputter();
+			xmlOutput.setFormat(Format.getPrettyFormat());
+	        try {
+				xmlOutput.output(rDoc, System.out);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}       
+	//-----------------------------------------------------------------------------------//
 			return false;
 
 	}

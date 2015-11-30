@@ -11,7 +11,7 @@ import org.jdom2.output.XMLOutputter;
 
 public class FunctionsXML {
 	
-	public byte[] XMLtoBytes(Document doc){
+	public static byte[] XMLtoBytes(Document doc){
 		byte[] bdoc = null;
 		try {
 			bdoc = (new XMLOutputter()).outputString(doc).getBytes("UTF-8");
@@ -22,7 +22,7 @@ public class FunctionsXML {
 		return bdoc;
 	}
 	
-	public Document BytesToXML(byte[] bdoc){
+	public static Document BytesToXML(byte[] bdoc){
 		Document doc = null;
 
 			try {

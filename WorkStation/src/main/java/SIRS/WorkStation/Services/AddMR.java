@@ -7,7 +7,6 @@ import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import SIRS.CryptoTools.FunctionsXML;
 import SIRS.CryptoTools.RequestsXML;
 
 public class AddMR {
@@ -51,7 +50,7 @@ public class AddMR {
 			}
 		}
 		if(op.equalsIgnoreCase("y")) {
-			functions.writeToScreen("ENVIADO\n");
+			
 			rDoc = request.createDoc();
 			rDoc = request.setPatient(rDoc, patient);
 			rDoc = request.setDoctor(rDoc, user);
@@ -59,7 +58,9 @@ public class AddMR {
 			rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
 			rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 			rDoc = request.setEntry(rDoc, entry);
-			//----------IMPRIMIR O DOC CRIADO, APAGAR DEPOIS ESTE CODIGO-------------------------//	    
+			functions.writeToScreen("ENVIADO\n");
+	
+	//----------IMPRIMIR O DOC CRIADO, APAGAR DEPOIS ESTE CODIGO-------------------------//	    
 			XMLOutputter xmlOutput = new XMLOutputter();
 			xmlOutput.setFormat(Format.getPrettyFormat());
 	        try {
@@ -67,22 +68,7 @@ public class AddMR {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
-			
-			
-			byte[] bdoc = (new FunctionsXML()).XMLtoBytes(rDoc);
-			functions.writeToScreen(String.valueOf(bdoc)+"\n");
-			
-			Document newDoc = (new FunctionsXML()).BytesToXML(bdoc);
-	        try {
-				xmlOutput.output(newDoc, System.out);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-
-	        
-	        
+			}       
 	//-----------------------------------------------------------------------------------//
 			
 		}

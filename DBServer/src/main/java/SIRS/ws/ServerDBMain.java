@@ -9,11 +9,12 @@ import SIRS.ws.uddi.UDDINaming;
 public class ServerDBMain {
 	
 	public static void main(String[] args) {
-		SQLthings.BDgetAllRegs ("Carla Josefina", 10001);
-		System.out.println("OUT");
-		SQLthings.BDgetAllRegs ("Cabakkj<bs", 10001);
-		System.out.println("OUT2");
-		
+//		SQLthings.BDgetAllRegs ("Carla Josefina");
+//		System.out.println("OUT");
+//		SQLthings.BDgetRegsBySpeciality("Carla Josefina", "Neuro");
+//		System.out.println("OUT2");
+//		SQLthings.BDaddReg("Carla Josefina", "2015/07/09 12:34:44", "10001", "Cardiologia", "entradaaaaa");
+
 	 // Check arguments
 //	  if (args.length < 3) {
 //            System.err.println("Argument(s) missing!");

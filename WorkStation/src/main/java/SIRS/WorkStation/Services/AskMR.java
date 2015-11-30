@@ -86,7 +86,7 @@ public class AskMR {
 
 			 		functions.writeToScreen("\n  [Antes da data X]\n\n");
 					while(data==null){
-						functions.writeToScreen("Insira a data (dd/MM/aaaa):\n");
+						functions.writeToScreen("Insira a data (aaaa/MM/dd):\n");
 						data = functions.getDate();
 					}
 				 	functions.writeToScreen("Nome do paciente: ");

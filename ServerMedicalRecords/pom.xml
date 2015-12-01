@@ -13,7 +13,13 @@
 
 
   <dependencies>
-  	 <!-- JAX-R API -->
+	  <dependency>
+		  <groupId>SIRS</groupId>
+		  <artifactId>CryptoTools</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+  	  </dependency>
+ <!-- JAX-R API -->
+  	
     <dependency>
       <groupId>javax.xml.registry</groupId>
       <artifactId>javax.xml.registry-api</artifactId>
@@ -104,10 +110,10 @@
   </properties>
 
   <build>
-    <plugins>
+     <plugins> 
    
-      <!-- getWSImport -->
-    <plugin>
+<!--       getWSImport -->
+     <plugin> 
         <groupId>org.jvnet.jax-ws-commons</groupId>
         <artifactId>jaxws-maven-plugin</artifactId>
         <version>2.3</version>
@@ -118,10 +124,10 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
+        <configuration> 
     
-      <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
-          <wsdlUrls>
+<!--       https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
+          <wsdlUrls> 
             <wsdlUrl>${wsdl.url}</wsdlUrl>
           </wsdlUrls>
         </configuration>
@@ -132,7 +138,7 @@
             <version>2.2.10</version>
           </dependency>
         </dependencies>
-      </plugin>
+      </plugin> 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>

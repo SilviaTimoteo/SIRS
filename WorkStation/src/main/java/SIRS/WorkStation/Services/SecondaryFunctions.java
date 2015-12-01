@@ -49,7 +49,8 @@ public class SecondaryFunctions {
 	}
 	
 	public String getDate(){
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Calendar cal = Calendar.getInstance();
+		DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 		Scanner input = new Scanner(System.in);
 		Date date = null;
 		try {
@@ -60,15 +61,24 @@ public class SecondaryFunctions {
 			return null;
 		}
 		
-		//input.close();
+		if(date.after(cal.getTime())){
+			writeToScreen("\n Data inválida\n");
+			return null;
+		}
+		cal.setTime(date);
+		
+		if((cal.get(Calendar.DAY_OF_MONTH)>31 && cal.get(Calendar.MONTH)>12)){
+			writeToScreen("\n Data inválida\n");
+			return null;
+		}
 		
 		return format.format(date);
 	}
 	
 	public String getCurrentDate(){
 		Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String date = String.valueOf(sdf.format(cal.getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");
+        String date = sdf.format(cal.getTime());
         return date;  
 	}
 	
@@ -80,7 +90,7 @@ public class SecondaryFunctions {
 	public String getCurrentTime() {
 	        Calendar cal = Calendar.getInstance();
 	        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-	        String time = String.valueOf(sdf.format(cal.getTime()));
+	        String time = sdf.format(cal.getTime());
 	        return time;
 	}
 	

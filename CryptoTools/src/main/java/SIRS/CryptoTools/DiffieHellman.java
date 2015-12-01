@@ -55,19 +55,25 @@ public  class DiffieHellman {
 	 * @return Yserver, SecretKey
 	 * @throws Exception
 	 */
-	public Key[] serverGenerateKey(PublicKey keyPublicClient) throws Exception{
-		 KeyPairGenerator serverKeyGen = KeyPairGenerator.getInstance("DH");
-		 DHParameterSpec dhSpec =((DHPublicKey)keyPublicClient).getParams();
-		 serverKeyGen.initialize(dhSpec, new SecureRandom());
-		//compute YServer
-		 KeyAgreement serverKeyAgree=KeyAgreement.getInstance("DH");
-		 KeyPair serverPair =  serverKeyGen.generateKeyPair();
-		 
-		 serverKeyAgree.init(serverPair.getPrivate());
-		 serverKeyAgree.doPhase(keyPublicClient, true);
-		 //compute sharedSecret
-		 Key key = serverKeyAgree.generateSecret("AES");
-		 return new Key[] {serverPair.getPublic(),key};
+	public Key[] serverGenerateKey(Key keyPublicClient){
+		try{
+			 KeyPairGenerator serverKeyGen = KeyPairGenerator.getInstance("DH");
+			 DHParameterSpec dhSpec =((DHPublicKey)keyPublicClient).getParams();
+			 serverKeyGen.initialize(dhSpec, new SecureRandom());
+			//compute YServer
+			 KeyAgreement serverKeyAgree=KeyAgreement.getInstance("DH");
+			 KeyPair serverPair =  serverKeyGen.generateKeyPair();
+			 
+			 serverKeyAgree.init(serverPair.getPrivate());
+			 serverKeyAgree.doPhase(keyPublicClient, true);
+			 //compute sharedSecret
+			 Key key = CipherFunctions.generateKeyFromBytes(serverKeyAgree.generateSecret());
+			 return new Key[] {serverPair.getPublic(),key};
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -77,10 +83,10 @@ public  class DiffieHellman {
 	 * @return SecretKey
 	 * @throws Exception
 	 */
-	public Key  clientGenerateKey(KeyAgreement clientAgreement, PublicKey keyPublicServer) throws Exception{
+	public Key  clientGenerateKey(Key keyPublicServer) throws Exception{
 		 //compute sharedSecret
-		clientAgreement.doPhase(keyPublicServer, true);
-		return clientAgreement.generateSecret("AES");
+		this.clientAgreement.doPhase(keyPublicServer, true);
+		return CipherFunctions.generateKeyFromBytes(this.clientAgreement.generateSecret());	
 	}
 	
 }

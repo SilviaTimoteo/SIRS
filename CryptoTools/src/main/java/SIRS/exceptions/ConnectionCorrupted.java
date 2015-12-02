@@ -1,4 +1,4 @@
-package SIRS.ws.exceptions;
+package SIRS.exceptions;
 
 public class ConnectionCorrupted extends RuntimeException{
 	   private static final long serialVersionUID = 1L;

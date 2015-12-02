@@ -3,15 +3,19 @@ package SIRS.WorkStation.Services;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import sirs.ws.Server;
+
 public class Options {
 	Scanner input = new Scanner(System.in);
 	int option;
 	SecondaryFunctions functions = new SecondaryFunctions();
 	boolean noBack = true;
 	String user;
+	Server port = null;
 	
-	public Options(String username){
+	public Options(Server p, String username){
 		user = username;
+		port = p;
 	}
 	
 	public boolean showOptions(){ 
@@ -32,13 +36,13 @@ public class Options {
 		switch(option){
 		 	case 1:
 				while(noBack){
-					AskMR mr = new AskMR(user);
+					AskMR mr = new AskMR(port, user);
 					noBack = mr.showOptions();
 				}
 				break;
 		 	case 2:
 				while(noBack){
-					AddMR mr = new AddMR(user);
+					AddMR mr = new AddMR(port, user);
 					noBack = mr.showOptions();
 				}
 				break;

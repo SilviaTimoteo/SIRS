@@ -171,7 +171,6 @@ public  class DiffieHellman {
 		}
 		System.out.println("message: " + message);
 		Document doc1 = new ConnectionXML().createDoc();
-		System.out.println("C2-client: " + connXML1.getC2(doc));
 		doc1=connXML1.setC2(doc1, connXML1.getC2(doc));
 		doc1=connXML1.setMessage(doc1, message);
 		return FunctionsXML.XMLtoBytes(doc1);

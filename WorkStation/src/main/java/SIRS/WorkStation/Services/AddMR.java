@@ -7,7 +7,11 @@ import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import sirs.ws.Server;
+import SIRS.CryptoTools.CipherFunctions;
+import SIRS.CryptoTools.FunctionsXML;
 import SIRS.CryptoTools.RequestsXML;
+import SIRS.WorkStation.App;
 
 public class AddMR {
 
@@ -21,9 +25,17 @@ public class AddMR {
 	RequestsXML request = new RequestsXML();
 	Document rDoc = null;
 	String user;
+	Server port = null;
+	int docId;
+	byte[] docCipher = null;
+	byte[] result = null;
+	String toReturn = null;
 	
-	public AddMR(String username){
+	
+	public AddMR(Server p, String username){
 		user = username;
+		port = p;
+		docId = Integer.parseInt(username); 
 	}
 	
 	public boolean showOptions() {
@@ -58,19 +70,17 @@ public class AddMR {
 			rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
 			rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 			rDoc = request.setEntry(rDoc, entry);
-			functions.writeToScreen("ENVIADO\n");
-	
-	//----------IMPRIMIR O DOC CRIADO, APAGAR DEPOIS ESTE CODIGO-------------------------//	    
-			XMLOutputter xmlOutput = new XMLOutputter();
-			xmlOutput.setFormat(Format.getPrettyFormat());
-	        try {
-				xmlOutput.output(rDoc, System.out);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}       
-	//-----------------------------------------------------------------------------------//
+
+			docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
 			
+	 		//result = port.getRegistryByDate(docId, docCipher);
+	 		
+	 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+			
+
+			//functions.writeToScreen("ENVIADO\n");
+			
+	
 		}
 		else functions.writeToScreen("CANCELED\n");
 		return false;

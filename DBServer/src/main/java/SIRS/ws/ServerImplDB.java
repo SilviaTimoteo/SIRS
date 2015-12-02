@@ -117,6 +117,36 @@ public class ServerImplDB implements ServerDB{
 		byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
 		return responseBytes;
 	}
+	
+	public byte[] addRegistry (byte [] message) {
+		byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+		
+		// Criar o documento XML a partir dos bytes
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		
+		// Tirar do XML os campos necessarios
+		RequestsXML reqXML = new RequestsXML();
+		String patient = reqXML.getPatient(doc);
+		String doctor = reqXML.getDoctor(doc);
+		String timestamp = reqXML.getTimestamp(doc);
+		String specialty = reqXML.getSpeciality(doc);
+		String date = reqXML.getDate(doc);
+		String entry = reqXML.getEntry(doc);
+		
+		
+		// Adicionar registo medico
+		// FALTA TRY CATCH!!!!!!!!!!!!!!!!!!
+		SQLVerify.verifyAddReg(patient, doctor, specialty, entry, date, timestamp);
+		
+		// Criar XML para dizer se o registo foi adicionado com sucesso
+		Document responseXML = reqXML.createDoc();
+		reqXML.setEntry(responseXML, "true");
+		
+		// Cifrar o XML
+		byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+		return responseBytes;
+
+	}
 
 	public byte[] sendChallenge(byte[] message) {
 		Document doc = FunctionsXML.BytesToXML(message);

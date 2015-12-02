@@ -11,4 +11,5 @@ public interface ServerDB {
 	@WebMethod byte[] getRegistriesDB(byte[] message);
 	@WebMethod byte[] getRegistryByDateDB(byte[] message);
 	@WebMethod byte[] getRegistryBySpecialityDB(byte[] message);
+	@WebMethod byte[] generateSessionKeyDoctor(int doctorID, byte[] message);
 }

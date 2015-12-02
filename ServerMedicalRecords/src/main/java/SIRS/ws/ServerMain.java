@@ -20,6 +20,7 @@ public class ServerMain {
 	public static String[] serverDBEndPoint=new String[3];//uddiURLDB nameDB
 	public static Key keySessionDB = null;
 	public static void main(String[] args) throws Exception {
+	
 		String password ="pAw5S3GZ";
 		String serverID = "S1";
 //-------------------------------------------------------------SERVERDB CONNECTION----------------------------------------------------------------
@@ -28,13 +29,13 @@ public class ServerMain {
 		System.out.println("serverDBEndPoint[0]:" + serverDBEndPoint[0]);
 		serverDBEndPoint[1]=args[4];
 		ServerDB port = ConnectionServerDB.getPortServerDB();
-
+		
 		//1- establishing a session key with ServerDB
 		DiffieHellman dh = new DiffieHellman(password,serverID);
 		//1.2 sending to the Server
 		byte[] result = port.loginDB(dh.sendClientParameters());
 		//1.3 generating  session key		
-		Key keySessionDB =dh.receiveServerParameters(result);
+		keySessionDB =dh.receiveServerParameters(result);
 		System.out.println("KeyAgreed: " + printBase64Binary(keySessionDB.getEncoded()));
 		//1.4 creating challenge
 		byte[] result1= port.sendChallenge(dh.sentClientChallenge());
@@ -58,7 +59,7 @@ public class ServerMain {
         SIRS.ws.uddi.UDDINaming uddiNaming = null;
         try {
             endpoint = Endpoint.create(new ServerImpl());
-
+            System.out.println("ServerPedidos: " + String.valueOf(endpoint));
             // publish endpoint
             System.out.printf("Starting %s%n", url);
             endpoint.publish(url);

@@ -27,7 +27,7 @@ public class ConnectionServerDB {
 		
 		       System.out.printf("Looking for '%s'%n", nameDB);
 		       String endpointAddress = uddiNamingDB.lookup(nameDB);
-		
+		       System.out.println("ServerDb" + endpointAddress);
 		       if (endpointAddress == null) {
 		           System.out.println("Not found!");
 		           return null;

@@ -14,6 +14,7 @@ import javax.jws.*;
 import org.jdom2.Document;
 
 import SIRS.CryptoTools.*;
+import SIRS.DBServer.SQLVerify;
 import SIRS.ws.exceptions.ConnectionCorrupted;
 @WebService(endpointInterface="SIRS.ws.ServerDB")
 public class ServerImplDB implements ServerDB{
@@ -82,4 +83,27 @@ public class ServerImplDB implements ServerDB{
 		return "authentication successful".getBytes();
 	}
 
+	public byte[] generateSessionKeyDoctor(int doctorID, byte[] message) {
+		ConnectionXML connXML =new ConnectionXML();
+		Document doc = FunctionsXML.BytesToXML(message);
+		String yDoctor= connXML.getMessage(doc);
+	
+		String password=SQLVerify.getPassword(Integer.toString(doctorID));
+		System.out.printf(password);
+		
+		byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yDoctor), CipherFunctions.generateKeyBYPassword(password));//yDoc decifrado
+		PublicKey key =CipherFunctions.generatePublicKeyFromBytes(msgDecif);
+		//generating keys
+		Key[] keysDoctor = new DiffieHellman().serverGenerateKey(key);
+		Key keyDoctor = keysDoctor[1];//chave de comunicao entre doctor e client
+		System.out.println("key - ServerDb: " + printBase64Binary(keyDoctor.getEncoded()));
+		//generating docXML to ServerMedicalRecords
+		
+		Document doc1 = connXML.createDoc();
+		doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysDoctor[0].getEncoded(), CipherFunctions.generateKeyBYPassword(password)))); //public params of doctor
+		doc1= connXML.setC1(doc1,printBase64Binary(CipherFunctions.cipher(keyDoctor.getEncoded(), serverS1Key)));//chave  de comunicacao entre doctor e server de pedidos
+		return FunctionsXML.XMLtoBytes(doc1);
+	}
+
+	
 }

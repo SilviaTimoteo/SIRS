@@ -20,7 +20,7 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {
-        DiffieHellman diffieHellman = new DiffieHellman();
+        DiffieHellman diffieHellman = new DiffieHellman("jdkjsdk", "jkkdsjcc");
         Key keyPublicC = diffieHellman.clientGenerateParams();
         PublicKey publicKey2 = CipherFunctions.generatePublicKeyFromBytes(keyPublicC.getEncoded());
        

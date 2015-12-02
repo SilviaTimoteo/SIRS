@@ -30,43 +30,17 @@ public class ServerMain {
 		ServerDB port = ConnectionServerDB.getPortServerDB();
 
 		//1- establishing a session key with ServerDB
-		DiffieHellman dh = new DiffieHellman();
-		Key  paramPublic = dh.clientGenerateParams();
-		byte[] cipherPublic = CipherFunctions.cipher(paramPublic.getEncoded(), CipherFunctions.generateKeyBYPassword(password));
-		//1.1 generating xml with the encrypted public value
-		ConnectionXML connXML = new ConnectionXML();
-		Document doc = connXML.createDoc();
-		doc=connXML.setId(doc, serverID);
-		doc=connXML.setMessage(doc,printBase64Binary(cipherPublic));
+		DiffieHellman dh = new DiffieHellman(password,serverID);
 		//1.2 sending to the Server
-		byte[] result = port.loginDB(FunctionsXML.XMLtoBytes(doc));
-		//1.3 generating  session key
-		Document doc2  = FunctionsXML.BytesToXML(result);
-		byte[] keyBytes= CipherFunctions.decipher(parseBase64Binary(new ConnectionXML().getMessage(doc2)),CipherFunctions.generateKeyBYPassword(password));
-		PublicKey key = CipherFunctions.generatePublicKeyFromBytes(keyBytes);
-		Key keySessionDB =dh.clientGenerateKey(key);
-		System.out.println(printBase64Binary(keySessionDB.getEncoded()));
+		byte[] result = port.loginDB(dh.sendClientParameters());
+		//1.3 generating  session key		
+		Key keySessionDB =dh.receiveServerParameters(result);
+		System.out.println("KeyAgreed: " + printBase64Binary(keySessionDB.getEncoded()));
 		//1.4 creating challenge
-		byte[]  challenge = CipherFunctions.SecureRandomNumber() ;
-		System.out.println("C1 -> sent: " + printBase64Binary(challenge));
-		byte[] challengeCiphered = CipherFunctions.cipher(challenge, keySessionDB);
-		//1.5 XML challenge
-		ConnectionXML connXML1 = new ConnectionXML();
-		Document doc1 = connXML1.createDoc();
-		doc1 = connXML1.setC1(doc1,printBase64Binary(challengeCiphered));
-		byte[] result1= port.sendChallenge(FunctionsXML.XMLtoBytes(doc1));
+		byte[] result1= port.sendChallenge(dh.sentClientChallenge());
 		//check challenge
-		Document doc3  = FunctionsXML.BytesToXML(result1);
-		byte[] c1Received =CipherFunctions.decipher(parseBase64Binary(connXML1.getC1(doc1)), keySessionDB);
-		System.out.println("C1 -> received: " + printBase64Binary(c1Received));
-		String message = ValidateRequests.validateChallenge(challenge, c1Received);
-		System.out.println("message: " + message);
-		Document doc4 = connXML.createDoc();
-		System.out.println("C2-client: " + connXML1.getC2(doc3));
-		doc4=connXML1.setC2(doc4, connXML1.getC2(doc3));
-		doc4=connXML1.setMessage(doc4, message);
-		byte[] result3 = port.checkChallenge(FunctionsXML.XMLtoBytes(doc4));
-		System.out.println(String.valueOf(result3));
+		byte[] result2 = port.checkChallenge(dh.checkChallenge(result1));
+		System.out.println(String.valueOf(result2));
 		
 //-----------------------------ServerPublish--------------------------------------
       // Check arguments

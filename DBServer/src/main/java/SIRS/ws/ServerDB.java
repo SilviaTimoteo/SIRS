@@ -1,7 +1,9 @@
 package SIRS.ws;
 import javax.jws.*;
 
-import SIRS.ws.exceptions.ConnectionCorrupted;
+import SIRS.exceptions.*;
+
+
 
 @WebService
 public interface ServerDB {

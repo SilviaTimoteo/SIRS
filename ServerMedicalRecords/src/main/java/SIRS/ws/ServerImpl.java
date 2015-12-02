@@ -3,6 +3,7 @@ import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 import java.security.Key;
+import java.text.SimpleDateFormat;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.jws.*;
@@ -12,8 +13,11 @@ import org.jdom2.Document;
 import SIRS.CryptoTools.CipherFunctions;
 import SIRS.CryptoTools.ConnectionXML;
 import SIRS.CryptoTools.FunctionsXML;
+import SIRS.CryptoTools.RequestsXML;
 import sirs.ws.*;
 
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +27,8 @@ public class ServerImpl implements Server {
 	Key keyServer =ServerMain.keySessionDB;
 	ServerDB port = ConnectionServerDB.getPortServerDB();
 	Map<String,Key>  mapKeys = new HashMap<String,Key>();
-
+	Map<String,byte[]> mapChallenge = new HashMap<String,byte[]>();
+	
 	public byte[] login(int userID, byte[] message) {
 		byte[] result = port.generateSessionKeyDoctor(userID, message);//to ServerDB
 		Document doc = FunctionsXML.BytesToXML(result);
@@ -39,33 +44,131 @@ public class ServerImpl implements Server {
 	}
 
 	public byte[] getRegistries(int userID, byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		//Decifrar mensagem da wokstation
+		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+		//Obter docXML
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		RequestsXML reqXML = new RequestsXML();
+		String timestamp = reqXML.getTimestamp(doc);
+		//Validar TimeStamp
+		ValidateRequests.validTimestamp(timestamp);
+		//Update do timeStamp
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+		String now = sdf.format(Calendar.getInstance().getTime());
+		doc=reqXML.setTimestamp(doc, now);
+		//Cifrar doc com a chave do SERVIDORDB
+		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+		byte[] result=port.getRegistriesDB(docCiphered);
+		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+		return docToWorkstation;
 	}
 
 	public byte[] getRegistryByDate(int userID, byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		//Decifrar mensagem da wokstation
+		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+		//Obter docXML
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		RequestsXML reqXML = new RequestsXML();
+		String timestamp = reqXML.getTimestamp(doc);
+		//Validar TimeStamp
+		ValidateRequests.validTimestamp(timestamp);
+		//Update do timeStamp
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+		String now = sdf.format(Calendar.getInstance().getTime());
+		doc=reqXML.setTimestamp(doc, now);
+		//Cifrar doc com a chave do SERVIDORDB
+		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+		byte[] result=port.getRegistryByDateDB(docCiphered);
+		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+		return docToWorkstation;		
 	}
 
 	public byte[] getRegistryBySpeciality(int userID, byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		//Decifrar mensagem da wokstation
+		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+		//Obter docXML
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		RequestsXML reqXML = new RequestsXML();
+		String timestamp = reqXML.getTimestamp(doc);
+		//Validar TimeStamp
+		ValidateRequests.validTimestamp(timestamp);
+		//Update do timeStamp
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+		String now = sdf.format(Calendar.getInstance().getTime());
+		doc=reqXML.setTimestamp(doc, now);
+		//Cifrar doc com a chave do SERVIDORDB
+		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+		byte[] result=port.getRegistryBySpecialityDB(docCiphered);
+		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+		return docToWorkstation;		
 	}
 
 	public byte[] sendChallenge(int userID, byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		ConnectionXML connXML = new ConnectionXML();
+		Document doc = FunctionsXML.BytesToXML(message);
+		
+		String challenge1= connXML.getC1(doc);
+		byte[] challengeServer = CipherFunctions.SecureRandomNumber();
+		mapChallenge.put(Integer.toString(userID), challengeServer);	
+		System.out.println("\n Doctor <-> ServerMedical __ C2 -> sent: " + printBase64Binary(challengeServer) +"\n");
+		
+		Document doc1 = connXML.createDoc();
+		doc1 = connXML.setC1(doc1,challenge1);
+		doc1 = connXML.setC2(doc1,printBase64Binary(CipherFunctions.cipher(challengeServer, mapKeys.get(Integer.toString(userID)))));
+		return FunctionsXML.XMLtoBytes(doc1);		
 	}
 
 	public byte[] checkChallenge(int userID, byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		Document doc = FunctionsXML.BytesToXML(message);
+		ConnectionXML conn = new ConnectionXML();
+		String msg = conn.getMessage(doc);
+		System.out.println("msg: " + msg);
+		byte[] challengeReceived = CipherFunctions.decipher(parseBase64Binary(conn.getC2(doc)), mapKeys.get(Integer.toString(userID)));
+		System.out.println("C2 -> received: " + printBase64Binary(challengeReceived));
+
+		/*if(msg.equals("Authentication Failed") || !(Arrays.equals(challengeReceived, challengeCreated))){
+			serverS1Key= null;
+			challengeCreated=null;
+			throw new ConnectionCorrupted();			
+		}*/
+		String msgToReturn ="authentication successful";
+		System.out.println("msgToReturn: " + msgToReturn);
+		return msgToReturn.getBytes();	
 	}
 
 	public byte[] logon(int userID) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public byte[] addRegistryReq(int userID, byte[] message) {
+		/*/Decifrar mensagem da wokstation
+		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+		//Obter docXML
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		RequestsXML reqXML = new RequestsXML();
+		String timestamp = reqXML.getTimestamp(doc);
+		//Validar TimeStamp
+		ValidateRequests.validTimestamp(timestamp);
+		//Update do timeStamp
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+		String now = sdf.format(Calendar.getInstance().getTime());
+		doc=reqXML.setTimestamp(doc, now);
+		//Cifrar doc com a chave do SERVIDORDB
+		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+		byte[] result=port.getRegistryBySpecialityDB(docCiphered);
+		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+		return docToWorkstation;				
+		 */
+		return null
 	}
 	
 	

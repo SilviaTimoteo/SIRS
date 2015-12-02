@@ -9,6 +9,7 @@ public interface Server {
 	 @WebMethod byte[] getRegistryBySpeciality(int userID, byte[] message);
 	 @WebMethod byte[] sendChallenge(int userID, byte[]message);
 	 @WebMethod byte[] checkChallenge(int userID,byte[] message);
+	 @WebMethod byte[] addRegistryReq(int userID, byte[] message);
 	 @WebMethod byte[] logon(int userID);
 }
  

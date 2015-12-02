@@ -13,9 +13,17 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.ws.ServerDBMain</mainclass>
+<<<<<<< HEAD
     <uddi.url>http://192.168.1.159:8080</uddi.url>
+=======
+    <uddi.url>http://192.168.1.113:8080</uddi.url>
+>>>>>>> refs/remotes/origin/master
     <ws.name>ServerDB</ws.name>
+<<<<<<< HEAD
     <ws.url>http://192.168.1.159:8082/serverDB-ws/endpoint</ws.url>
+=======
+    <ws.url>http://192.168.1.113:8082/serverDB-ws/endpoint</ws.url>
+>>>>>>> refs/remotes/origin/master
   </properties>
 
   <dependencies>
@@ -132,6 +140,7 @@
             <argument>${ws.name}</argument>
             <argument>${ws.url}</argument>
           </arguments>
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>
       </plugin>
       <plugin>

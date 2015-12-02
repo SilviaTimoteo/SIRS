@@ -9,15 +9,22 @@ import SIRS.ws.uddi.UDDINaming;
 public class ServerDBMain {
 	
 	public static void main(String[] args) {
-//		SQLthings.BDgetAllRegs ("Carla Josefina", 10001);
-//		System.out.println("OUT");
-//		SQLthings.BDgetAllRegs ("Cabakkj<bs", 10001);
-//		System.out.println("OUT2");
-		
-//		SQLthings.BDgetAllRegs ("Carla Josefina");
-//		System.out.println("OUT");
-//		SQLthings.BDgetRegsBySpeciality("Carla Josefina", "Neuro");
-//		System.out.println("OUT2");
+//			try {
+//				SQLVerify.verifyAllReg ("Carla Josefina", "10001", "15:49:00");
+//				System.out.println("OUT");
+//			}
+//			catch (Exception e) {System.out.println(e.getMessage());}
+//			
+//			try{
+//				SQLVerify.verifyAllReg ("Cabakkj<bs", "10001", "15:49:00");
+//				System.out.println("OUT2");
+//			}
+//			catch (Exception e) {System.out.println(e.getMessage());}
+//			System.out.println("DOES THIS WORK??");
+//
+//	
+//			
+
 //		SQLthings.BDaddReg("Carla Josefina", "2015/07/09 12:34:44", "10001", "Cardiologia", "entradaaaaa");
 
 //	  Check arguments

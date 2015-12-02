@@ -1,11 +1,11 @@
 package SIRS.ws.exceptions;
 
-public class DoctorDoesntExist extends RuntimeException {
+public class DoctorNotOfPatient extends RuntimeException {
 
 		   private static final long serialVersionUID = 1L;
 		   @Override
 		    public String getMessage() {
-				return ">>>> The doctor doesn't exist\n";
+				return ">>>> The doctor is not one of the patients doctors\n";
 		    }
 
 }

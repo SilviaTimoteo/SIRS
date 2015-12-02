@@ -64,7 +64,7 @@ public class SQLthings {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		
 		return "";
 	}
@@ -123,7 +123,7 @@ public class SQLthings {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		
 		return "";
 		
@@ -190,7 +190,7 @@ public class SQLthings {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		
 		return "";
 		
@@ -234,7 +234,7 @@ public class SQLthings {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 
 
 	}

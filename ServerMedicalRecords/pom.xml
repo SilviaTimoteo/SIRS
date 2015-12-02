@@ -99,13 +99,13 @@
    <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.ws.ServerMain</mainclass>
-    <uddi.url>http://192.168.1.3:8080</uddi.url>
+    <uddi.url>http://192.168.1.159:8080</uddi.url>
     <ws.name>Server</ws.name>
-    <ws.url>http://192.168.1.3:8081/server-ws/endpoint</ws.url>
+    <ws.url>http://192.168.1.159:8081/server-ws/endpoint</ws.url>
     <!-- GetServerDB -->
-    <uddiDB.url>http://192.168.1.3:8080</uddiDB.url>
+    <uddiDB.url>http://192.168.1.159:8080</uddiDB.url>
     <wsDB.name>ServerDB</wsDB.name>
-    <wsDB.url>http://192.168.1.3:8082/serverDB-ws/endpoint</wsDB.url>
+    <wsDB.url>http://192.168.1.159:8082/serverDB-ws/endpoint</wsDB.url>
      <wsdl.url>${wsDB.url}?WSDL</wsdl.url>
   </properties>
 

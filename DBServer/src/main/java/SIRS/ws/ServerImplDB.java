@@ -16,7 +16,7 @@ import org.jdom2.Element;
 
 import SIRS.CryptoTools.*;
 import SIRS.DBServer.SQLVerify;
-import SIRS.ws.exceptions.ConnectionCorrupted;
+import SIRS.exceptions.*;
 @WebService(endpointInterface="SIRS.ws.ServerDB")
 public class ServerImplDB implements ServerDB{
 	private String passwordServerRequest = "pAw5S3GZ";

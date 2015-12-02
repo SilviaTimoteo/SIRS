@@ -148,7 +148,7 @@ public class ServerImpl implements Server {
 	}
 
 	public byte[] addRegistryReq(int userID, byte[] message) {
-		/*/Decifrar mensagem da wokstation
+		//Decifrar mensagem da wokstation
 		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 		//Obter docXML
 		Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -162,13 +162,11 @@ public class ServerImpl implements Server {
 		doc=reqXML.setTimestamp(doc, now);
 		//Cifrar doc com a chave do SERVIDORDB
 		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.getRegistryBySpecialityDB(docCiphered);
+		byte[] result=port.addRegistry(docCiphered);
 		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
 		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
 		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;				
-		 */
-		return null
+		return docToWorkstation;						
 	}
 	
 	

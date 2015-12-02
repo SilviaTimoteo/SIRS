@@ -12,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.jws.*;
 
 import org.jdom2.Document;
+import org.jdom2.Element;
 
 import SIRS.CryptoTools.*;
 import SIRS.DBServer.SQLVerify;
@@ -25,30 +26,96 @@ public class ServerImplDB implements ServerDB{
 	public byte[] loginDB(byte[] message) {
 		Document doc = FunctionsXML.BytesToXML(message);
 		String yServer= new ConnectionXML().getMessage(doc);		
-		byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yServer), CipherFunctions.generateKeyBYPassword("pAw5S3GZ"));	
+		byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yServer), CipherFunctions.generateKeyBYPassword(passwordServerRequest));	
 		PublicKey key =CipherFunctions.generatePublicKeyFromBytes(msgDecif);
 		Key[] keysServer = new DiffieHellman().serverGenerateKey(key);
 		System.out.println(printBase64Binary(keysServer[1].getEncoded()));
 		serverS1Key = keysServer[1];
 		ConnectionXML connXML = new ConnectionXML();
 		Document doc1 = connXML.createDoc();
-		doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysServer[0].getEncoded(), CipherFunctions.generateKeyBYPassword("pAw5S3GZ"))));
+		doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysServer[0].getEncoded(), CipherFunctions.generateKeyBYPassword(passwordServerRequest))));
 		return FunctionsXML.XMLtoBytes(doc1);
 	}
 
 	public byte[] getRegistriesDB(byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		// Decifrar a mensagem com a chave partilhada entre os dois servidores
+		byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+		
+		// Criar o documento XML a partir dos bytes
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		
+		// Tirar do XML os campos necessarios
+		RequestsXML reqXML = new RequestsXML();
+		String patient = reqXML.getPatient(doc);
+		String doctor = reqXML.getDoctor(doc);
+		String timestamp = reqXML.getTimestamp(doc);
+		
+		// Verificar se o medico tem acesso aos registos => POLICIES
+		// FALTA TRY CATCH!!!!!!!!!!!!!!!!!!
+		String result = SQLVerify.verifyAllReg(patient,doctor,timestamp);
+		
+		// Criar XML com os registos pedidos
+		Document responseXML = reqXML.createDoc();
+		reqXML.setEntry(responseXML, result);
+		
+		// Cifrar o XML
+		byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+		return responseBytes;
 	}
 
 	public byte[] getRegistryByDateDB(byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		// Decifrar a mensagem com a chave partilhada entre os dois servidores
+		byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+		
+		// Criar o documento XML a partir dos bytes
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		
+		// Tirar do XML os campos necessarios
+		RequestsXML reqXML = new RequestsXML();
+		String patient = reqXML.getPatient(doc);
+		String doctor = reqXML.getDoctor(doc);
+		String timestamp = reqXML.getTimestamp(doc);
+		String beforeafter = reqXML.getBeforeAfter(doc);
+		String date = reqXML.getDate(doc);
+		
+		// Verificar se o medico tem acesso aos registos => POLICIES
+		// FALTA TRY CATCH!!!!!!!!!!!!!!!!!!
+		String result = SQLVerify.verifyRegsByDate(patient, doctor, beforeafter, date, timestamp);
+		
+		// Criar XML com os registos pedidos
+		Document responseXML = reqXML.createDoc();
+		reqXML.setEntry(responseXML, result);
+		
+		// Cifrar o XML
+		byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+		return responseBytes;
 	}
 
 	public byte[] getRegistryBySpecialityDB(byte[] message) {
-		// TODO Auto-generated method stub
-		return null;
+		// Decifrar a mensagem com a chave partilhada entre os dois servidores
+		byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+		
+		// Criar o documento XML a partir dos bytes
+		Document doc = FunctionsXML.BytesToXML(msgDecif);
+		
+		// Tirar do XML os campos necessarios
+		RequestsXML reqXML = new RequestsXML();
+		String patient = reqXML.getPatient(doc);
+		String doctor = reqXML.getDoctor(doc);
+		String timestamp = reqXML.getTimestamp(doc);
+		String specialty = reqXML.getSpeciality(doc);
+		
+		// Verificar se o medico tem acesso aos registos => POLICIES
+		// FALTA TRY CATCH!!!!!!!!!!!!!!!!!!
+		String result = SQLVerify.verifyRegBySpeciality(patient, doctor, specialty, timestamp);
+		
+		// Criar XML com os registos pedidos
+		Document responseXML = reqXML.createDoc();
+		reqXML.setEntry(responseXML, result);
+		
+		// Cifrar o XML
+		byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+		return responseBytes;
 	}
 
 	public byte[] sendChallenge(byte[] message) {

@@ -10,7 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import SIRS.ws.exceptions.*;
+
+
+import SIRS.exceptions.*;
 import static java.util.concurrent.TimeUnit.*;
 
 public class SQLVerify {

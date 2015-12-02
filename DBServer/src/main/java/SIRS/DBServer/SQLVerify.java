@@ -341,4 +341,46 @@ public class SQLVerify {
 		
 	}
 	
+	/**
+	 * Returns doctors specialty
+	 * @parameter doctorId (Did)
+	 * @return password (String)
+	 */
+	public static String getPassword(String doctorId){
+		Connection conn=null;
+		Statement stmt=null;
+		ResultSet res=null;
+		String result = null;
+		try {
+			Class.forName(myDriver);
+
+			conn = DriverManager.getConnection(myUrl,myUser,myPass);
+
+			stmt = conn.createStatement();
+			res = stmt.executeQuery
+					("select K from staff_pass where Did = '"+doctorId+"'");
+
+			while(res.next()){
+				result = res.getString("K");
+			}
+			
+			res.close(); 
+			stmt.close();
+			conn.close();
+			
+			return result;
+						
+		}
+		catch (SQLException e) {
+			System.out.println("SQLException: " + e.getMessage());
+		    System.out.println("SQLState: " + e.getSQLState());
+		    System.out.println("VendorError: " + e.getErrorCode());
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: " + e.getMessage());
+		}
+		catch (Throwable ignore) {}
+		return result;
+		
+	}
+	
 }

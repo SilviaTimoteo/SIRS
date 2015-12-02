@@ -8,6 +8,11 @@ public class Options {
 	int option;
 	SecondaryFunctions functions = new SecondaryFunctions();
 	boolean noBack = true;
+	String user;
+	
+	public Options(String username){
+		user = username;
+	}
 	
 	public boolean showOptions(){ 
 		functions.writeToScreen("\n\n[WORKSTATION]\n\n");
@@ -27,13 +32,13 @@ public class Options {
 		switch(option){
 		 	case 1:
 				while(noBack){
-					AskMR mr = new AskMR();
+					AskMR mr = new AskMR(user);
 					noBack = mr.showOptions();
 				}
 				break;
 		 	case 2:
 				while(noBack){
-					AddMR mr = new AddMR();
+					AddMR mr = new AddMR(user);
 					noBack = mr.showOptions();
 				}
 				break;

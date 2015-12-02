@@ -1,16 +1,25 @@
 package SIRS.CryptoTools;
 
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
+import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 public class CipherFunctions {
 //------------------------Function to symmetricKeys------------------------------------
@@ -22,16 +31,19 @@ public class CipherFunctions {
 	 * @return cipher text
 	 */
 	public static byte[] cipher(byte[] mensagem, Key key){
-		byte[] cipherBytes = null;
+		byte[] output = null;
+		
 		try{
 	        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, key);
-			cipherBytes = cipher.doFinal(mensagem);
+			output=new byte[cipher.getOutputSize(mensagem.length)];
+			 int outputLen=cipher.update(mensagem,0,mensagem.length,output,0);
+			 cipher.doFinal(output,outputLen);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		return cipherBytes;
+		return output;
 	}
 	/**
 	 * Decipher the message with symmetric key
@@ -41,6 +53,8 @@ public class CipherFunctions {
 	 */
 	public static byte[] decipher(byte[] mensagemCifrada, Key key){
 		byte[] newPlainBytes=null;
+		byte[] cipherBytes = null;
+	
 		try{
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 			cipher.init(Cipher.DECRYPT_MODE, key);
@@ -59,6 +73,7 @@ public class CipherFunctions {
 	 * @return publicKey, privateKey
 	 * @throws NoSuchAlgorithmException
 	 */
+	
 	
 	public static Key[] generateRSAKeys() throws NoSuchAlgorithmException{
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -111,4 +126,60 @@ public class CipherFunctions {
 
 	    return new String(dectyptedText);
 	  }
+	public static PublicKey generatePublicKeyFromBytes(byte[] key){
+		try{
+			EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(key);
+			KeyFactory keyFactory = KeyFactory.getInstance("DH");
+			PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
+			return publicKey2;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	public static Key generateKeyBYPassword(String password){	
+		SecretKeySpec secretKeySpec = null;
+		try{
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			byte[] key = sha.digest(password.getBytes());
+			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			secretKeySpec = new SecretKeySpec(key, "AES");
+			return secretKeySpec;
+		 }
+		 catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 return secretKeySpec;
+	}
+	
+	public static Key generateKeyFromBytes(byte[] password){	
+		SecretKeySpec secretKeySpec = null;
+		try{
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			byte[] key = sha.digest(password);
+			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			System.out.println("key:" + printBase64Binary(key));
+			secretKeySpec = new SecretKeySpec(key, "AES");
+			return secretKeySpec;
+		 }
+		 catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 return secretKeySpec;
+	}
+	public static byte[] SecureRandomNumber(){
+		try{
+			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+	        final byte array[] = new byte[16];
+	        random.nextBytes(array);
+	        return array;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

@@ -14,11 +14,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.WorkStation.App</mainclass>
 
-    <uddi.url>http://192.168.1.4:8080</uddi.url>
-    <ws.name>Server</ws.name>
+<!--     <uddi.url>http://192.168.1.4:8080</uddi.url> -->
+<!--     <ws.name>Server</ws.name> -->
 
-    <ws.url>http://192.168.1.4:8081/server-ws/endpoint</ws.url>
-    <wsdl.url>${ws.url}?WSDL</wsdl.url>
+<!--     <ws.url>http://192.168.1.4:8081/server-ws/endpoint</ws.url> -->
+<!--     <wsdl.url>${ws.url}?WSDL</wsdl.url> -->
   </properties>
 
   <dependencies>
@@ -98,34 +98,39 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+		  <groupId>SIRS</groupId>
+		  <artifactId>CryptoTools</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+  	  </dependency>
   </dependencies>
    <build>
     <plugins>
-      <plugin>
-        <groupId>org.jvnet.jax-ws-commons</groupId>
-        <artifactId>jaxws-maven-plugin</artifactId>
-        <version>2.3</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>wsimport</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
-          <wsdlUrls>
-            <wsdlUrl>${wsdl.url}</wsdlUrl>
-          </wsdlUrls>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-tools</artifactId>
-            <version>2.2.10</version>
-          </dependency>
-        </dependencies>
-      </plugin>
+<!--       <plugin> -->
+<!--         <groupId>org.jvnet.jax-ws-commons</groupId> -->
+<!--         <artifactId>jaxws-maven-plugin</artifactId> -->
+<!--         <version>2.3</version> -->
+<!--         <executions> -->
+<!--           <execution> -->
+<!--             <goals> -->
+<!--               <goal>wsimport</goal> -->
+<!--             </goals> -->
+<!--           </execution> -->
+<!--         </executions> -->
+<!--         <configuration> -->
+<!--           https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
+<!--           <wsdlUrls> -->
+<!--             <wsdlUrl>${wsdl.url}</wsdlUrl> -->
+<!--           </wsdlUrls> -->
+<!--         </configuration> -->
+<!--         <dependencies> -->
+<!--           <dependency> -->
+<!--             <groupId>com.sun.xml.ws</groupId> -->
+<!--             <artifactId>jaxws-tools</artifactId> -->
+<!--             <version>2.2.10</version> -->
+<!--           </dependency> -->
+<!--         </dependencies> -->
+<!--       </plugin> -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>

@@ -42,7 +42,7 @@ public class App
     		userLogin = login.login();
     	
     		while(userLogin){
-    			Options ops = new Options();
+    			Options ops = new Options(login.getUsername());
     			userLogin = ops.showOptions();	
     		}
     	}

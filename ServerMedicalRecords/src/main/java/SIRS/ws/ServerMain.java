@@ -1,13 +1,49 @@
 package SIRS.ws;
 
+import java.security.Key;
+import java.security.PublicKey;
+
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.registry.JAXRException;
 import javax.xml.ws.Endpoint;
 
-import SIRS.ws.uddi.UDDINaming;
+import java.security.SecureRandom;
 
+import org.jdom2.Document;
+
+import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
+import static javax.xml.bind.DatatypeConverter.printBase64Binary;
+import sirs.ws.ServerDB;
+import SIRS.ws.uddi.UDDINaming;
+import SIRS.CryptoTools.*;
 public class ServerMain {
-	public static void main(String[] args) throws JAXRException {
-        // Check arguments
+	public static String[] serverDBEndPoint=new String[3];//uddiURLDB nameDB
+	public static Key keySessionDB = null;
+	public static void main(String[] args) throws Exception {
+		String password ="pAw5S3GZ";
+		String serverID = "S1";
+//-------------------------------------------------------------SERVERDB CONNECTION----------------------------------------------------------------
+		
+		serverDBEndPoint[0] =args[3];
+		System.out.println("serverDBEndPoint[0]:" + serverDBEndPoint[0]);
+		serverDBEndPoint[1]=args[4];
+		ServerDB port = ConnectionServerDB.getPortServerDB();
+
+		//1- establishing a session key with ServerDB
+		DiffieHellman dh = new DiffieHellman(password,serverID);
+		//1.2 sending to the Server
+		byte[] result = port.loginDB(dh.sendClientParameters());
+		//1.3 generating  session key		
+		Key keySessionDB =dh.receiveServerParameters(result);
+		System.out.println("KeyAgreed: " + printBase64Binary(keySessionDB.getEncoded()));
+		//1.4 creating challenge
+		byte[] result1= port.sendChallenge(dh.sentClientChallenge());
+		//check challenge
+		byte[] result2 = port.checkChallenge(dh.checkChallenge(result1));
+		System.out.println(String.valueOf(result2));
+		
+//-----------------------------ServerPublish--------------------------------------
+      // Check arguments
         if (args.length < 3) {
             System.err.println("Argument(s) missing!");
             System.err.printf("Usage: java %s uddiURL wsName wsURL%n", ServerMain.class.getName());
@@ -35,29 +71,6 @@ public class ServerMain {
             // wait
             System.out.println("Awaiting connections");
             System.out.println("Press enter to shutdown");
-            //SERVERDB CONNECTION
-            if (args.length < 2) {
-                System.err.println("Argument(s) missing!");
-                System.err.printf("Usage: java %s uddiURL name%n", ServerMain.class.getName());
-                return;
-            }
-
-            String uddiURLDB = args[3];
-            String nameDB = args[4];
-
-            System.out.printf("Contacting UDDI at %s%n", uddiURL);
-            UDDINaming uddiNamingDB = new UDDINaming(uddiURL);
-
-            System.out.printf("Looking for '%s'%n", nameDB);
-            String endpointAddress = uddiNamingDB.lookup(nameDB);
-
-            if (endpointAddress == null) {
-                System.out.println("Not found!");
-                return;
-            } else {
-                System.out.printf("Found %s%n", endpointAddress);
-              
-    	    }
             System.in.read();
 
         } catch (Exception e) {

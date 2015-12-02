@@ -9,17 +9,19 @@ import SIRS.ws.uddi.UDDINaming;
 public class ServerDBMain {
 	
 	public static void main(String[] args) {
-		try {
-			SQLVerify.verifyAllReg ("Carla Josefina", "10001", "15:49:00");
-			System.out.println("OUT");
-		}
-		catch (Exception e) {System.out.println(e.getMessage());}
-		
-		try{
-			SQLVerify.verifyAllReg ("Cabakkj<bs", "10001", "15:49:00");
-			System.out.println("OUT2");
-		}
-		catch (Exception e) {System.out.println(e.getMessage());}
+			try {
+				SQLVerify.verifyAllReg ("Carla Josefina", "10001", "15:49:00");
+				System.out.println("OUT");
+			}
+			catch (Exception e) {System.out.println(e.getMessage());}
+			
+			try{
+				SQLVerify.verifyAllReg ("Cabakkj<bs", "10001", "15:49:00");
+				System.out.println("OUT2");
+			}
+			catch (Exception e) {System.out.println(e.getMessage());}
+			System.out.println("DOES THIS WORK??");
+
 	
 			
 

@@ -126,6 +126,8 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
+		
 
 		//return false;
 	}
@@ -171,7 +173,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		//return false;
 	}
 	
@@ -225,7 +227,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-	
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		//return false;
 	}
 	
@@ -271,6 +273,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 	
 		//return false;
 	}
@@ -324,7 +327,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		//return false;
 	}
 	
@@ -392,7 +395,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		return result;
 		
 	}
@@ -434,7 +437,7 @@ public class SQLVerify {
 		} catch (ClassNotFoundException e) {
 			System.out.println("ClassNotFoundException: " + e.getMessage());
 		}
-		catch (Throwable ignore) {}
+		catch(IllegalThreadStateException e) { System.out.println("GOTCHAA!!!!");} 
 		return result;
 		
 	}

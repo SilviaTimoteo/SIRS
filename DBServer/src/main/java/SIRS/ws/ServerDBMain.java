@@ -1,33 +1,31 @@
 package SIRS.ws;
 
+import SIRS.CryptoTools.FunctionsXML;
+import SIRS.CryptoTools.RequestsXML;
 import SIRS.DBServer.*;
 
 import javax.xml.ws.Endpoint;
+
+import org.jdom2.Document;
 
 import SIRS.ws.uddi.UDDINaming;
 
 public class ServerDBMain {
 	
 	public static void main(String[] args) {
-//			try {
-//				SQLVerify.verifyAllReg ("Carla Josefina", "10001", "15:49:00");
-//				System.out.println("OUT");
-//			}
-//			catch (Exception e) {System.out.println(e.getMessage());}
-//			
-//			try{
-//				SQLVerify.verifyAllReg ("Cabakkj<bs", "10001", "15:49:00");
-//				System.out.println("OUT2");
-//			}
-//			catch (Exception e) {System.out.println(e.getMessage());}
-//			System.out.println("DOES THIS WORK??");
-//
-//	
-//			
+//		try{
+//			String result =	SQLVerify.verifyAllReg("Carla Josefina", "10001", "13:06:00");
+//			RequestsXML req = new RequestsXML();
+//			Document doc = req.createDoc();
+//			doc = req.setEntry(doc, result);
+//			byte [] bd = FunctionsXML.XMLtoBytes(doc);
+//			Document novo = FunctionsXML.BytesToXML(bd);
+//			String cenas = req.getEntry(novo);
+//			System.out.println(cenas);		
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
 
-//		SQLthings.BDaddReg("Carla Josefina", "2015/07/09 12:34:44", "10001", "Cardiologia", "entradaaaaa");
-
-//	  Check arguments
 	  if (args.length < 3) {
             System.err.println("Argument(s) missing!");
             System.err.printf("Usage: java %s uddiURL wsName wsURL%n", ServerDBMain.class.getName());

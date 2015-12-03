@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import SIRS.ws.exceptions.*;
+import SIRS.exceptions.*;
 import static java.util.concurrent.TimeUnit.*;
 
 public class SQLVerify {
@@ -90,12 +90,12 @@ public class SQLVerify {
 	 * @parameter doctorId (Did)
 	 * @return void
 	 */
-	public static void doctorExists(String doctorId) throws DoctorDoesntExist {
+	public static void doctorExists(String doctorId) throws DoctorDoesntExist{
 		Connection conn=null;
 		Statement stmt=null;
 		ResultSet res=null;
 		boolean result = false;
-		
+
 		try {
 			Class.forName(myDriver);
 
@@ -142,6 +142,11 @@ public class SQLVerify {
 		Statement stmt=null;
 		ResultSet res=null;
 		boolean result = false;
+		
+		if(patient.contains("'")){
+			throw new PatientDoesntExist();
+		}
+		
 		
 		try {
 			Class.forName(myDriver);
@@ -405,11 +410,19 @@ public class SQLVerify {
 	 * @parameter doctorId (Did)
 	 * @return password (String)
 	 */
-	public static String getPassword(String doctorId){
+	public static String getPassword(String doctorId) throws DoctorDoesntExist{
 		Connection conn=null;
 		Statement stmt=null;
 		ResultSet res=null;
 		String result = null;
+		
+		
+		if(doctorId.contains("'")){
+			throw new DoctorDoesntExist();
+		}
+		
+		
+		
 		try {
 			Class.forName(myDriver);
 

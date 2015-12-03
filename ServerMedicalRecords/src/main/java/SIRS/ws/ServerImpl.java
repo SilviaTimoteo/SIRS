@@ -168,7 +168,7 @@ public class ServerImpl implements Server {
 		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
 		return docToWorkstation;				
 		 */
-		return null
+		return null;
 	}
 	
 	

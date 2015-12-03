@@ -69,8 +69,13 @@ public class AskMR {
 					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 			 		
 					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
-					
-			 		result = port.getRegistries(docId, docCipher);
+					try{
+						result = port.getRegistries(docId, docCipher);
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+						return true; 
+					}	 		
 			 		
 			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
 			 		
@@ -100,8 +105,13 @@ public class AskMR {
 					
 					
 					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
-					
-			 		result = port.getRegistryByDate(docId, docCipher);
+					try{
+						result = port.getRegistryByDate(docId, docCipher);
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+						return true; 
+					}
 			 		
 			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
 			 		
@@ -129,9 +139,13 @@ public class AskMR {
 					rDoc = request.setBeforeAfter(rDoc, "B");
 					
 					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
-					
-			 		result = port.getRegistryByDate(docId, docCipher);				
-					
+					try{
+						result = port.getRegistryByDate(docId, docCipher);
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+						return true; 
+					}
 			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
 			 		
 					functions.writeToScreen(toReturn);
@@ -159,8 +173,13 @@ public class AskMR {
 					
 					
 					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
-					
-			 		result = port.getRegistryByDate(docId, docCipher);
+					try{
+						result = port.getRegistryByDate(docId, docCipher);
+					}
+					catch(Exception e){
+						System.out.println(e.getMessage());
+						return true; 
+					}
 			 		
 			 		
 			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));

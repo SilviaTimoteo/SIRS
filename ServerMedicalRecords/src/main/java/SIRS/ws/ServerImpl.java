@@ -137,14 +137,16 @@ public class ServerImpl implements Server {
 			challengeCreated=null;
 			throw new ConnectionCorrupted();			
 		}*/
-		String msgToReturn ="authentication successful";
+		mapChallenge.remove(Integer.toString(userID));
+		String msgToReturn ="Authentication Successful";
 		System.out.println("msgToReturn: " + msgToReturn);
 		return msgToReturn.getBytes();	
 	}
 
-	public byte[] logon(int userID) {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] logout(int userID) {
+		mapKeys.remove(Integer.toString(userID));
+		String msgToReturn = "Logout Successful";
+		return msgToReturn.getBytes() ;
 	}
 
 	public byte[] addRegistryReq(int userID, byte[] message) {

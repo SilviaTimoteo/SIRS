@@ -10,6 +10,6 @@ public interface Server {
 	 @WebMethod byte[] sendChallenge(int userID, byte[]message);
 	 @WebMethod byte[] checkChallenge(int userID,byte[] message);
 	 @WebMethod byte[] addRegistryReq(int userID, byte[] message);
-	 @WebMethod byte[] logon(int userID);
+	 @WebMethod byte[] logout(int userID);
 }
  

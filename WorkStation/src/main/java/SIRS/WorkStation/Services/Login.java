@@ -15,6 +15,7 @@ import sirs.ws.Server;
 import SIRS.CryptoTools.ConnectionXML;
 import SIRS.CryptoTools.DiffieHellman;
 import SIRS.WorkStation.App;
+import SIRS.exceptions.DoctorDoesntExist;
 
 public class Login {
 	String username;
@@ -25,13 +26,14 @@ public class Login {
 	ConnectionXML connection = new ConnectionXML();
 	Document cDoc = null;
 	Server port = null;
+	int docId;
 	
 	public Login(Server p){
 		port = p;
 	}
 	
 	
-	public boolean login(){
+	public boolean login() throws DoctorDoesntExist{
 		functions.writeToScreen("\n\n\nLogin\n");
 		
 		functions.writeToScreen("\nIdUtilizador: ");
@@ -40,8 +42,11 @@ public class Login {
 		functions.writeToScreen("Palavra-passe: ");
 	    password = String.valueOf(input.readPassword());
 	    
-	    int docId = Integer.parseInt(username); 
-	    
+	    try{
+	    	docId = Integer.parseInt(username); 
+	    }catch (NumberFormatException e){
+	    	throw new DoctorDoesntExist();
+	    }
 		//1- establishing a session key with ServerDB
 		DiffieHellman dh = new DiffieHellman(password,username);
 		//1.2 sending to the Server

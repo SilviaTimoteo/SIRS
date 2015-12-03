@@ -40,7 +40,7 @@ public class SQLthings {
 				String entry = res.getString("entry");
 				
 				medReg += "| " + Did + " | " + Dname + " | " + spec + " | " + date + " | " + entry + " |\n";  
-			//	res.getBlob(numCol).free();
+				//res.getBlob(numCol).free();
 
 			}
 			

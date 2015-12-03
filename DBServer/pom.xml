@@ -13,9 +13,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.ws.ServerDBMain</mainclass>
-    <uddi.url>http://192.168.1.159:8080</uddi.url>
+    <uddi.url>http://194.210.230.40:8080</uddi.url>
     <ws.name>ServerDB</ws.name>
-    <ws.url>http://192.168.1.159:8082/serverDB-ws/endpoint</ws.url>
+    <ws.url>http://194.210.230.40:8082/serverDB-ws/endpoint</ws.url>
   </properties>
 
   <dependencies>

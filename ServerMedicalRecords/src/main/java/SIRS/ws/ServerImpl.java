@@ -137,18 +137,20 @@ public class ServerImpl implements Server {
 			challengeCreated=null;
 			throw new ConnectionCorrupted();			
 		}*/
-		String msgToReturn ="authentication successful";
+		mapChallenge.remove(Integer.toString(userID));
+		String msgToReturn ="Authentication Successful";
 		System.out.println("msgToReturn: " + msgToReturn);
 		return msgToReturn.getBytes();	
 	}
 
-	public byte[] logon(int userID) {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] logout(int userID) {
+		mapKeys.remove(Integer.toString(userID));
+		String msgToReturn = "Logout Successful";
+		return msgToReturn.getBytes() ;
 	}
 
 	public byte[] addRegistryReq(int userID, byte[] message) {
-		/*/Decifrar mensagem da wokstation
+		//Decifrar mensagem da wokstation
 		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 		//Obter docXML
 		Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -162,13 +164,11 @@ public class ServerImpl implements Server {
 		doc=reqXML.setTimestamp(doc, now);
 		//Cifrar doc com a chave do SERVIDORDB
 		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.getRegistryBySpecialityDB(docCiphered);
+		byte[] result=port.addRegistry(docCiphered);
 		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
 		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
 		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;				
-		 */
-		return null;
+		return docToWorkstation;						
 	}
 	
 	

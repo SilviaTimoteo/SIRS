@@ -18,29 +18,32 @@ public class App
 	public static Key key = null;
 	
 	
-    public static void main( String[] args ) 
+    public static void main( String[] args ) throws Exception
     {
-
-       serverEndPoint[0] = args[0];
-       serverEndPoint[1] = args[1];
-       
-       Server port = ConnectionServerMedicalRecords.getPortServer();
-        
-    	boolean userLogin = false;
-    	while(true){
-    		clearScreen();
-    		Login login = new Login(port);
-    		userLogin = login.login();
-    	
-    		while(userLogin){
-    			Options ops = new Options(port, login.getUsername());
-    			userLogin = ops.showOptions();	
-    		}
+    	try{
+	    	serverEndPoint[0] = args[0];
+	    	serverEndPoint[1] = args[1];
+	       
+	    	Server port = ConnectionServerMedicalRecords.getPortServer();
+	        
+	    	boolean userLogin = false;
+	    	while(true){
+	    		clearScreen();
+	    		Login login = new Login(port);
+	    		userLogin = login.login();
+	    	
+	    		while(userLogin){
+	    			Options ops = new Options(port, login.getUsername());
+	    			userLogin = ops.showOptions();	
+	    		}
+	    	}
+    	}catch (Exception e){
+    		System.out.println(e.getMessage());
     	}
     }
     
     
-    public static void clearScreen(){
+    public static void clearScreen() throws Exception{
     	final String os = System.getProperty("os.name");
         if (os.contains("Windows"))
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();

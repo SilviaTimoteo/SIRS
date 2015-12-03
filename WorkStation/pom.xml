@@ -14,11 +14,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.WorkStation.App</mainclass>
 
-<!--     <uddi.url>http://192.168.1.4:8080</uddi.url> -->
-<!--     <ws.name>Server</ws.name> -->
+	<uddi.url>http://194.210.230.40:8080</uddi.url>
+    <ws.name>Server</ws.name>
 
-<!--     <ws.url>http://192.168.1.4:8081/server-ws/endpoint</ws.url> -->
-<!--     <wsdl.url>${ws.url}?WSDL</wsdl.url> -->
+    <ws.url>http://194.210.230.40:8081/server-ws/endpoint</ws.url>
+    <wsdl.url>${ws.url}?WSDL</wsdl.url> 
   </properties>
 
   <dependencies>
@@ -107,8 +107,8 @@
    <build>
     <plugins>
        <plugin> 
-<!--         <groupId>org.jvnet.jax-ws-commons</groupId> -->
-<!-- <!--         <artifactId>jaxws-maven-plugin</artifactId> -->
+       <groupId>org.jvnet.jax-ws-commons</groupId>
+         <artifactId>jaxws-maven-plugin</artifactId> 
         <version>2.3</version>
         <executions>
           <execution>
@@ -118,7 +118,7 @@
           </execution>
         </executions>
         <configuration>
-          https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html
+<!--  https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
           <wsdlUrls>
             <wsdlUrl>${wsdl.url}</wsdlUrl>
           </wsdlUrls>

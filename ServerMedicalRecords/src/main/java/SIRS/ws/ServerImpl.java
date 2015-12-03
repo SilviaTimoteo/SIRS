@@ -56,7 +56,7 @@ public class ServerImpl implements Server {
 	}
 
 	public byte[] getRegistries(int userID, byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
-		
+		try{
 			//Decifrar mensagem da wokstation
 			byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 			//Obter docXML
@@ -76,52 +76,100 @@ public class ServerImpl implements Server {
 			byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
 			byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
 			return docToWorkstation;
-		
-		
+		}
+		catch(DoctorDoesntExist e){
+			throw new DoctorDoesntExist();
+		}
+		catch(PatientDoesntExist e){
+			throw new PatientDoesntExist();
+		}
+		catch(DoctorNotOfPatient e){
+			throw new DoctorNotOfPatient();
+		}
+		catch(DoctorSpecialty e){
+			throw new DoctorSpecialty();
+		}
+		catch(InvalidTimestamp e){
+			throw new DoctorSpecialty();
+		}		
 	}
 
 	public byte[] getRegistryByDate(int userID, byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
-		//Decifrar mensagem da wokstation
-		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
-		//Obter docXML
-		Document doc = FunctionsXML.BytesToXML(msgDecif);
-		RequestsXML reqXML = new RequestsXML();
-		String timestamp = reqXML.getTimestamp(doc);
-		//Validar TimeStamp
-		ValidateRequests.validTimestamp(timestamp);
-		//Update do timeStamp
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
-		String now = sdf.format(Calendar.getInstance().getTime());
-		doc=reqXML.setTimestamp(doc, now);
-		//Cifrar doc com a chave do SERVIDORDB
-		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.getRegistryByDateDB(docCiphered);
-		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
-		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
-		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;		
+		try{
+			//Decifrar mensagem da wokstation
+			byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+			//Obter docXML
+			Document doc = FunctionsXML.BytesToXML(msgDecif);
+			RequestsXML reqXML = new RequestsXML();
+			String timestamp = reqXML.getTimestamp(doc);
+			//Validar TimeStamp
+			ValidateRequests.validTimestamp(timestamp);
+			//Update do timeStamp
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+			String now = sdf.format(Calendar.getInstance().getTime());
+			doc=reqXML.setTimestamp(doc, now);
+			//Cifrar doc com a chave do SERVIDORDB
+			byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+			byte[] result=port.getRegistryByDateDB(docCiphered);
+			//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+			byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+			byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+			return docToWorkstation;
+		}
+		catch(DoctorDoesntExist e){
+			throw new DoctorDoesntExist();
+		}
+		catch(PatientDoesntExist e){
+			throw new PatientDoesntExist();
+		}
+		catch(DoctorNotOfPatient e){
+			throw new DoctorNotOfPatient();
+		}
+		catch(DoctorSpecialty e){
+			throw new DoctorSpecialty();
+		}
+		catch(InvalidTimestamp e){
+			throw new DoctorSpecialty();
+		}
 	}
 
 	public byte[] getRegistryBySpeciality(int userID, byte[] message) throws DoctorDoesntExist, PatientDoesntExist, DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
-		//Decifrar mensagem da wokstation
-		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
-		//Obter docXML
-		Document doc = FunctionsXML.BytesToXML(msgDecif);
-		RequestsXML reqXML = new RequestsXML();
-		String timestamp = reqXML.getTimestamp(doc);
-		//Validar TimeStamp
-		ValidateRequests.validTimestamp(timestamp);
-		//Update do timeStamp
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
-		String now = sdf.format(Calendar.getInstance().getTime());
-		doc=reqXML.setTimestamp(doc, now);
-		//Cifrar doc com a chave do SERVIDORDB
-		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.getRegistryBySpecialityDB(docCiphered);
-		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
-		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
-		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;		
+		try{
+			//Decifrar mensagem da wokstation
+			byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+			//Obter docXML
+			Document doc = FunctionsXML.BytesToXML(msgDecif);
+			RequestsXML reqXML = new RequestsXML();
+			String timestamp = reqXML.getTimestamp(doc);
+			//Validar TimeStamp
+			ValidateRequests.validTimestamp(timestamp);
+			//Update do timeStamp
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+			String now = sdf.format(Calendar.getInstance().getTime());
+			doc=reqXML.setTimestamp(doc, now);
+			//Cifrar doc com a chave do SERVIDORDB
+			byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+			byte[] result=port.getRegistryBySpecialityDB(docCiphered);
+			//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+			byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+			byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+			return docToWorkstation;
+		}
+		catch(DoctorDoesntExist e){
+			throw new DoctorDoesntExist();
+		}
+		catch(PatientDoesntExist e){
+			throw new PatientDoesntExist();
+		}
+		catch(DoctorNotOfPatient e){
+			throw new DoctorNotOfPatient();
+		}
+		catch(DoctorSpecialty e){
+			throw new DoctorSpecialty();
+		}
+		catch(InvalidTimestamp e){
+			throw new DoctorSpecialty();
+		}
 	}
 
 	public byte[] sendChallenge(int userID, byte[] message) {
@@ -165,25 +213,42 @@ public class ServerImpl implements Server {
 	}
 
 	public byte[] addRegistryReq(int userID, byte[] message)throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
-		//Decifrar mensagem da wokstation
-		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
-		//Obter docXML
-		Document doc = FunctionsXML.BytesToXML(msgDecif);
-		RequestsXML reqXML = new RequestsXML();
-		String timestamp = reqXML.getTimestamp(doc);
-		//Validar TimeStamp
-		ValidateRequests.validTimestamp(timestamp);
-		//Update do timeStamp
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
-		String now = sdf.format(Calendar.getInstance().getTime());
-		doc=reqXML.setTimestamp(doc, now);
-		//Cifrar doc com a chave do SERVIDORDB
-		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.addRegistry(docCiphered);
-		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
-		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
-		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;						
+		try{
+			//Decifrar mensagem da wokstation
+			byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+			//Obter docXML
+			Document doc = FunctionsXML.BytesToXML(msgDecif);
+			RequestsXML reqXML = new RequestsXML();
+			String timestamp = reqXML.getTimestamp(doc);
+			//Validar TimeStamp
+			ValidateRequests.validTimestamp(timestamp);
+			//Update do timeStamp
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+			String now = sdf.format(Calendar.getInstance().getTime());
+			doc=reqXML.setTimestamp(doc, now);
+			//Cifrar doc com a chave do SERVIDORDB
+			byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+			byte[] result=port.addRegistry(docCiphered);
+			//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+			byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+			byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+			return docToWorkstation;
+		}
+		catch(DoctorDoesntExist e){
+			throw new DoctorDoesntExist();
+		}
+		catch(PatientDoesntExist e){
+			throw new PatientDoesntExist();
+		}
+		catch(DoctorNotOfPatient e){
+			throw new DoctorNotOfPatient();
+		}
+		catch(DoctorSpecialty e){
+			throw new DoctorSpecialty();
+		}
+		catch(InvalidTimestamp e){
+			throw new DoctorSpecialty();
+		}
 	}
 	
 	

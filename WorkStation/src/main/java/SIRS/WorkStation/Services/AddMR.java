@@ -72,14 +72,20 @@ public class AddMR {
 			rDoc = request.setEntry(rDoc, entry);
 
 			docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
-			
-	 		//result = port.getRegistryByDate(docId, docCipher);
+			try{
+				result = port.addRegistryReq(docId, docCipher);
+			}
+			catch(Exception e){
+				System.out.println(e.getMessage());
+				return false;
+			}
 	 		
 	 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
 			
-
+	 		if(toReturn.equals("true"))functions.writeToScreen("SEND WITH SUCCESS\n");
+	 		else functions.writeToScreen("CANCELED\n");
 			//functions.writeToScreen("ENVIADO\n");
-			
+			//return false;
 	
 		}
 		else functions.writeToScreen("CANCELED\n");

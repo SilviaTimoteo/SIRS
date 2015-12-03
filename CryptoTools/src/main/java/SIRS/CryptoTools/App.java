@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Random;
 import java.lang.Integer;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -32,12 +33,15 @@ public class App
         	System.out.println(printBase64Binary(keysServer[1].getEncoded()));
 
         }
+/*
+        byte[] b = new byte[16];
+        new Random().nextBytes(b);
         byte[] c = CipherFunctions.SecureRandomNumber();
-        byte[] cCi= CipherFunctions.cipher(c, keyC);
-        byte[] cDes=CipherFunctions.decipher(cCi, keysServer[1]);
+        byte[] cCi= CipherFunctions.cipher(c, keyC,b);
+        byte[] cDes=CipherFunctions.decipher(cCi, keysServer[1],b);
         System.out.println("c: " + printBase64Binary(c));
         System.out.println("cDes: " + printBase64Binary(cDes));
-
+*/
 //    	RequestsXML request = new RequestsXML();
 //    	Document doc = null;
 //    	doc = request.createDoc();

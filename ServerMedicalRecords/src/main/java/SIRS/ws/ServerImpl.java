@@ -14,6 +14,12 @@ import SIRS.CryptoTools.CipherFunctions;
 import SIRS.CryptoTools.ConnectionXML;
 import SIRS.CryptoTools.FunctionsXML;
 import SIRS.CryptoTools.RequestsXML;
+import SIRS.exceptions.DoctorDoesntExist;
+import SIRS.exceptions.DoctorNotOfPatient;
+import SIRS.exceptions.DoctorSpecialty;
+import SIRS.exceptions.EmergencyDoctor;
+import SIRS.exceptions.InvalidTimestamp;
+import SIRS.exceptions.PatientDoesntExist;
 import sirs.ws.*;
 
 import java.util.Arrays;
@@ -29,43 +35,52 @@ public class ServerImpl implements Server {
 	Map<String,Key>  mapKeys = new HashMap<String,Key>();
 	Map<String,byte[]> mapChallenge = new HashMap<String,byte[]>();
 	
-	public byte[] login(int userID, byte[] message) {
-		byte[] result = port.generateSessionKeyDoctor(userID, message);//to ServerDB
-		Document doc = FunctionsXML.BytesToXML(result);
-		ConnectionXML conn = new ConnectionXML();
-		String msg = conn.getMessage(doc);//publicParamsDoctor
-		Key keyDoctor =new SecretKeySpec(CipherFunctions.decipher(parseBase64Binary(conn.getC1(doc)), keyServer), "AES");
-		mapKeys.put(Integer.toString(userID),keyDoctor);
-		System.out.println("key-Doctor - ServerMedical: " + printBase64Binary(keyDoctor.getEncoded()));
-		Document doc1 =conn.createDoc();
-		doc1= conn.setMessage(doc1, msg);
+	public byte[] login(int userID, byte[] message) throws DoctorDoesntExist {
+		try
+		{
+			byte[] result = port.generateSessionKeyDoctor(userID, message);//to ServerDB
+			Document doc = FunctionsXML.BytesToXML(result);
+			ConnectionXML conn = new ConnectionXML();
+			String msg = conn.getMessage(doc);//publicParamsDoctor
+			Key keyDoctor =new SecretKeySpec(CipherFunctions.decipher(parseBase64Binary(conn.getC1(doc)), keyServer), "AES");
+			mapKeys.put(Integer.toString(userID),keyDoctor);
+			System.out.println("key-Doctor - ServerMedical: " + printBase64Binary(keyDoctor.getEncoded()));
+			Document doc1 =conn.createDoc();
+			doc1= conn.setMessage(doc1, msg);
+			
+			return FunctionsXML.XMLtoBytes(doc1);
+		}
+		catch(DoctorDoesntExist e){
+			throw new DoctorDoesntExist();
+		}
+	}
+
+	public byte[] getRegistries(int userID, byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
 		
-		return FunctionsXML.XMLtoBytes(doc1);
+			//Decifrar mensagem da wokstation
+			byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
+			//Obter docXML
+			Document doc = FunctionsXML.BytesToXML(msgDecif);
+			RequestsXML reqXML = new RequestsXML();
+			String timestamp = reqXML.getTimestamp(doc);
+			//Validar TimeStamp
+			ValidateRequests.validTimestamp(timestamp);
+			//Update do timeStamp
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
+			String now = sdf.format(Calendar.getInstance().getTime());
+			doc=reqXML.setTimestamp(doc, now);
+			//Cifrar doc com a chave do SERVIDORDB
+			byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
+			byte[] result=port.getRegistriesDB(docCiphered);
+			//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
+			byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
+			byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
+			return docToWorkstation;
+		
+		
 	}
 
-	public byte[] getRegistries(int userID, byte[] message) {
-		//Decifrar mensagem da wokstation
-		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
-		//Obter docXML
-		Document doc = FunctionsXML.BytesToXML(msgDecif);
-		RequestsXML reqXML = new RequestsXML();
-		String timestamp = reqXML.getTimestamp(doc);
-		//Validar TimeStamp
-		ValidateRequests.validTimestamp(timestamp);
-		//Update do timeStamp
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:SS");
-		String now = sdf.format(Calendar.getInstance().getTime());
-		doc=reqXML.setTimestamp(doc, now);
-		//Cifrar doc com a chave do SERVIDORDB
-		byte[] docCiphered =CipherFunctions.cipher(FunctionsXML.XMLtoBytes(doc), keyServer);
-		byte[] result=port.getRegistriesDB(docCiphered);
-		//Decifra com a chave do ServidorDB e cifra com a chave do Doctor
-		byte[] docFromServerDB = CipherFunctions.decipher(result, keyServer);
-		byte[] docToWorkstation =CipherFunctions.cipher(docFromServerDB, mapKeys.get(Integer.toString(userID)));
-		return docToWorkstation;
-	}
-
-	public byte[] getRegistryByDate(int userID, byte[] message) {
+	public byte[] getRegistryByDate(int userID, byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
 		//Decifrar mensagem da wokstation
 		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 		//Obter docXML
@@ -87,7 +102,7 @@ public class ServerImpl implements Server {
 		return docToWorkstation;		
 	}
 
-	public byte[] getRegistryBySpeciality(int userID, byte[] message) {
+	public byte[] getRegistryBySpeciality(int userID, byte[] message) throws DoctorDoesntExist, PatientDoesntExist, DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		//Decifrar mensagem da wokstation
 		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 		//Obter docXML
@@ -149,7 +164,7 @@ public class ServerImpl implements Server {
 		return msgToReturn.getBytes() ;
 	}
 
-	public byte[] addRegistryReq(int userID, byte[] message) {
+	public byte[] addRegistryReq(int userID, byte[] message)throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		//Decifrar mensagem da wokstation
 		byte[] msgDecif = CipherFunctions.decipher(message, mapKeys.get(Integer.toString(userID)));
 		//Obter docXML

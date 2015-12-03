@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import sirs.ws.Server;
+import SIRS.WorkStation.App;
 
 public class Options {
 	Scanner input = new Scanner(System.in);
@@ -11,11 +12,13 @@ public class Options {
 	SecondaryFunctions functions = new SecondaryFunctions();
 	boolean noBack = true;
 	String user;
+	int docId;
 	Server port = null;
 	
 	public Options(Server p, String username){
 		user = username;
 		port = p;
+		docId = Integer.parseInt(username); 
 	}
 	
 	public boolean showOptions(){ 
@@ -47,8 +50,13 @@ public class Options {
 				}
 				break;
 		 	case 0:
-				functions.writeToScreen("\n\nTerminando sessão...\n\n");
-		
+				port.logout(docId);
+		 		App.key = null;
+		 		functions.writeToScreen("\n\nTerminando sessão...\n\n");
+				try{
+		 		App.clearScreen();
+				}catch(Exception ignore){}
+				
 				return false;
 			default:
 				functions.writeToScreen("\n Opção inválida!\n");

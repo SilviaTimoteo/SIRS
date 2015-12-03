@@ -27,8 +27,9 @@ public class App
 	    	Server port = ConnectionServerMedicalRecords.getPortServer();
 	        
 	    	boolean userLogin = false;
+	    	clearScreen();
 	    	while(true){
-	    		clearScreen();
+	    		
 	    		Login login = new Login(port);
 	    		userLogin = login.login();
 	    	
@@ -40,6 +41,7 @@ public class App
     	}catch (Exception e){
     		System.out.println(e.getMessage());
     	}
+    
     }
     
     

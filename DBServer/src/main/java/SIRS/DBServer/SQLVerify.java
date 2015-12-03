@@ -441,7 +441,9 @@ public class SQLVerify {
 			res.close(); 
 			stmt.close();
 			conn.close();
-			
+			if(result==null){
+				throw new DoctorDoesntExist();
+			}
 			return result;
 						
 		}

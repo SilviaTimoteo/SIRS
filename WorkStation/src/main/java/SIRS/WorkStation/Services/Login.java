@@ -27,6 +27,7 @@ public class Login {
 	Document cDoc = null;
 	Server port = null;
 	int docId;
+	byte[] result2;
 	
 	public Login(Server p){
 		port = p;
@@ -47,6 +48,7 @@ public class Login {
 	    }catch (NumberFormatException e){
 	    	throw new DoctorDoesntExist();
 	    }
+	    try{
 		//1- establishing a session key with ServerDB
 		DiffieHellman dh = new DiffieHellman(password,username);
 		//1.2 sending to the Server
@@ -57,8 +59,12 @@ public class Login {
 		//1.4 creating challenge
 		byte[] result1= port.sendChallenge(docId, dh.sentClientChallenge());
 		//check challenge
-		byte[] result2 = port.checkChallenge(docId, dh.checkChallenge(result1));
-		
+		result2 = port.checkChallenge(docId, dh.checkChallenge(result1));
+	    }catch (Exception e){
+	    	System.out.println(e.getMessage());
+	    	functions.writeToScreen("\nIdUtilizador ou palavra-passe errados!\n");
+	    	return false;
+	    }
 		
 		try {
 			if((new String(result2, "UTF-8").equalsIgnoreCase("authentication successful"))){

@@ -106,7 +106,7 @@ public class AskMR {
 			 		byte[] iv1 = CipherFunctions.ivGenerator();
 					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key, iv1);
 					try{
-						result = port.getRegistryByDate(docId, docCipher, iv1);
+						result = port.getRegistryBySpeciality(docId, docCipher, iv1);
 					}
 					catch(Exception e){
 						System.out.println(e.getMessage());

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package SIRS.WorkStation.Services;
 
 import java.io.IOException;

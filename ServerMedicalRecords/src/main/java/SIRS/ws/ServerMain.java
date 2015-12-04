@@ -33,14 +33,16 @@ public class ServerMain {
 		//1- establishing a session key with ServerDB
 		DiffieHellman dh = new DiffieHellman(password,serverID);
 		//1.2 sending to the Server
-		byte[] result = port.loginDB(dh.sendClientParameters());
+		byte[] iv0 = CipherFunctions.ivGenerator();
+		byte[] result = port.loginDB(dh.sendClientParameters(iv0), iv0);
 		//1.3 generating  session key		
-		keySessionDB =dh.receiveServerParameters(result);
+		keySessionDB =dh.receiveServerParameters(result, iv0);
 		System.out.println("KeyAgreed: " + printBase64Binary(keySessionDB.getEncoded()));
 		//1.4 creating challenge
-		byte[] result1= port.sendChallenge(dh.sentClientChallenge());
+		byte[] iv1 = CipherFunctions.ivGenerator();
+		byte[] result1= port.sendChallenge(dh.sentClientChallenge(iv1), iv1);
 		//check challenge
-		byte[] result2 = port.checkChallenge(dh.checkChallenge(result1));
+		byte[] result2 = port.checkChallenge(dh.checkChallenge(result1, iv1), iv1);
 		System.out.println(String.valueOf(result2));
 		
 //-----------------------------ServerPublish--------------------------------------

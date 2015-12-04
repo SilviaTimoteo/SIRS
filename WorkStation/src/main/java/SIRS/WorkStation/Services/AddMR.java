@@ -70,17 +70,17 @@ public class AddMR {
 			rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
 			rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 			rDoc = request.setEntry(rDoc, entry);
-
-			docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
+			byte[] iv0 = CipherFunctions.ivGenerator();
+			docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key,iv0);
 			try{
-				result = port.addRegistryReq(docId, docCipher);
+				result = port.addRegistryReq(docId, docCipher, iv0);
 			}
 			catch(Exception e){
 				System.out.println(e.getMessage());
 				return false;
 			}
 	 		
-	 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+	 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key, iv0)));
 			
 	 		if(toReturn.equals("true"))functions.writeToScreen("SEND WITH SUCCESS\n");
 	 		else functions.writeToScreen("CANCELED\n");

@@ -23,24 +23,24 @@ public class ServerImplDB implements ServerDB{
 	private Key serverS1Key = null;
 	private byte[] challengeCreated = null;
 	
-	public byte[] loginDB(byte[] message) {
+	public byte[] loginDB(byte[] message, byte[] iv) {
 		Document doc = FunctionsXML.BytesToXML(message);
 		String yServer= new ConnectionXML().getMessage(doc);		
-		byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yServer), CipherFunctions.generateKeyBYPassword(passwordServerRequest));	
+		byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yServer), CipherFunctions.generateKeyBYPassword(passwordServerRequest), iv);	
 		PublicKey key =CipherFunctions.generatePublicKeyFromBytes(msgDecif);
 		Key[] keysServer = new DiffieHellman().serverGenerateKey(key);
 		System.out.println(printBase64Binary(keysServer[1].getEncoded()));
 		serverS1Key = keysServer[1];
 		ConnectionXML connXML = new ConnectionXML();
 		Document doc1 = connXML.createDoc();
-		doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysServer[0].getEncoded(), CipherFunctions.generateKeyBYPassword(passwordServerRequest))));
+		doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysServer[0].getEncoded(), CipherFunctions.generateKeyBYPassword(passwordServerRequest),iv)));
 		return FunctionsXML.XMLtoBytes(doc1);
 	}
 
-	public byte[] getRegistriesDB(byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
+	public byte[] getRegistriesDB(byte[] message, byte[] iv) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp {
 		try{
 			// Decifrar a mensagem com a chave partilhada entre os dois servidores
-			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key, iv);	
 			
 			// Criar o documento XML a partir dos bytes
 			Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -60,7 +60,7 @@ public class ServerImplDB implements ServerDB{
 			reqXML.setEntry(responseXML, result);
 			
 			// Cifrar o XML
-			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key,iv);
 			return responseBytes;
 		}
 		catch(DoctorDoesntExist e){
@@ -80,10 +80,10 @@ public class ServerImplDB implements ServerDB{
 		}
 	}
 
-	public byte[] getRegistryByDateDB(byte[] message) throws  DoctorDoesntExist, PatientDoesntExist, DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
+	public byte[] getRegistryByDateDB(byte[] message, byte[] iv) throws  DoctorDoesntExist, PatientDoesntExist, DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		try{
 			// Decifrar a mensagem com a chave partilhada entre os dois servidores
-			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key,iv);	
 			
 			// Criar o documento XML a partir dos bytes
 			Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -105,7 +105,7 @@ public class ServerImplDB implements ServerDB{
 			reqXML.setEntry(responseXML, result);
 			
 			// Cifrar o XML
-			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key,iv);
 			return responseBytes;
 		}
 		catch(DoctorDoesntExist e){
@@ -125,10 +125,10 @@ public class ServerImplDB implements ServerDB{
 		}
 	}
 
-	public byte[] getRegistryBySpecialityDB(byte[] message) throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
+	public byte[] getRegistryBySpecialityDB(byte[] message,byte[] iv) throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		try{
 			// Decifrar a mensagem com a chave partilhada entre os dois servidores
-			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key,iv);	
 			
 			// Criar o documento XML a partir dos bytes
 			Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -149,7 +149,7 @@ public class ServerImplDB implements ServerDB{
 			reqXML.setEntry(responseXML, result);
 			
 			// Cifrar o XML
-			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key, iv);
 			return responseBytes;
 		}
 		catch(DoctorDoesntExist e){
@@ -170,9 +170,9 @@ public class ServerImplDB implements ServerDB{
 		
 	}
 	
-	public byte[] addRegistry (byte [] message)throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
+	public byte[] addRegistry (byte [] message, byte[] iv)throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		try{
-			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key);	
+			byte[] msgDecif = CipherFunctions.decipher(message, serverS1Key,iv);	
 			
 			// Criar o documento XML a partir dos bytes
 			Document doc = FunctionsXML.BytesToXML(msgDecif);
@@ -196,7 +196,7 @@ public class ServerImplDB implements ServerDB{
 			reqXML.setEntry(responseXML, "true");
 			
 			// Cifrar o XML
-			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key);
+			byte[] responseBytes = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(responseXML), serverS1Key, iv);
 			return responseBytes;
 		}
 		catch(DoctorDoesntExist e){
@@ -217,7 +217,7 @@ public class ServerImplDB implements ServerDB{
 
 	}
 
-	public byte[] sendChallenge(byte[] message) {
+	public byte[] sendChallenge(byte[] message, byte[] iv) {
 		Document doc = FunctionsXML.BytesToXML(message);
 		String challenge= new ConnectionXML().getC1(doc);
 		challengeCreated = CipherFunctions.SecureRandomNumber();
@@ -226,19 +226,19 @@ public class ServerImplDB implements ServerDB{
 		ConnectionXML connXML = new ConnectionXML();
 		Document doc1 = connXML.createDoc();
 		doc1 = connXML.setC1(doc1,challenge);
-		System.out.println("c2 ciphered " + printBase64Binary(CipherFunctions.cipher(challengeCreated, serverS1Key)));
-		doc1 = connXML.setC2(doc1,printBase64Binary(CipherFunctions.cipher(challengeCreated, serverS1Key)));
+		System.out.println("c2 ciphered " + printBase64Binary(CipherFunctions.cipher(challengeCreated, serverS1Key, iv)));
+		doc1 = connXML.setC2(doc1,printBase64Binary(CipherFunctions.cipher(challengeCreated, serverS1Key, iv)));
 		System.out.println("c2 ciphered XMl " + connXML.getC2(doc1));
 
 		return FunctionsXML.XMLtoBytes(doc1);
 	}
 
-	public byte[] checkChallenge(byte[] message)throws ConnectionCorrupted {
+	public byte[] checkChallenge(byte[] message, byte[] iv)throws ConnectionCorrupted {
 		Document doc = FunctionsXML.BytesToXML(message);
 		ConnectionXML conn = new ConnectionXML();
 		String msg = conn.getMessage(doc);
 		System.out.println("msg: " + msg);
-		byte[] challengeReceived = CipherFunctions.decipher(parseBase64Binary(conn.getC2(doc)), serverS1Key);
+		byte[] challengeReceived = CipherFunctions.decipher(parseBase64Binary(conn.getC2(doc)), serverS1Key,iv);
 		System.out.println("C2 -> received: " + printBase64Binary(challengeReceived));
 
 		if(msg.equals("Authentication Failed") || !(Arrays.equals(challengeReceived, challengeCreated))){
@@ -249,7 +249,7 @@ public class ServerImplDB implements ServerDB{
 		return "authentication successful".getBytes();
 	}
 
-	public byte[] generateSessionKeyDoctor(int doctorID, byte[] message) throws DoctorDoesntExist{
+	public byte[] generateSessionKeyDoctor(int doctorID, byte[] message, byte[] iv) throws DoctorDoesntExist{
 		try{
 			ConnectionXML connXML =new ConnectionXML();
 			Document doc = FunctionsXML.BytesToXML(message);
@@ -258,7 +258,7 @@ public class ServerImplDB implements ServerDB{
 			String password=SQLVerify.getPassword(Integer.toString(doctorID));
 			System.out.printf(password);
 			
-			byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yDoctor), CipherFunctions.generateKeyBYPassword(password));//yDoc decifrado
+			byte[] msgDecif = CipherFunctions.decipher(parseBase64Binary(yDoctor), CipherFunctions.generateKeyBYPassword(password), iv);//yDoc decifrado
 			PublicKey key =CipherFunctions.generatePublicKeyFromBytes(msgDecif);
 			//generating keys
 			Key[] keysDoctor = new DiffieHellman().serverGenerateKey(key);
@@ -267,8 +267,8 @@ public class ServerImplDB implements ServerDB{
 			//generating docXML to ServerMedicalRecords
 			
 			Document doc1 = connXML.createDoc();
-			doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysDoctor[0].getEncoded(), CipherFunctions.generateKeyBYPassword(password)))); //public params of doctor
-			doc1= connXML.setC1(doc1,printBase64Binary(CipherFunctions.cipher(keyDoctor.getEncoded(), serverS1Key)));//chave  de comunicacao entre doctor e server de pedidos
+			doc1 = connXML.setMessage(doc1, printBase64Binary(CipherFunctions.cipher(keysDoctor[0].getEncoded(), CipherFunctions.generateKeyBYPassword(password), iv))); //public params of doctor
+			doc1= connXML.setC1(doc1,printBase64Binary(CipherFunctions.cipher(keyDoctor.getEncoded(), serverS1Key,iv)));//chave  de comunicacao entre doctor e server de pedidos
 			return FunctionsXML.XMLtoBytes(doc1);
 		}
 		catch(DoctorDoesntExist e){

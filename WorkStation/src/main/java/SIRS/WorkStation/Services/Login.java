@@ -12,6 +12,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import sirs.ws.Server;
+import SIRS.CryptoTools.CipherFunctions;
 import SIRS.CryptoTools.ConnectionXML;
 import SIRS.CryptoTools.DiffieHellman;
 import SIRS.WorkStation.App;
@@ -52,14 +53,16 @@ public class Login {
 		//1- establishing a session key with ServerDB
 		DiffieHellman dh = new DiffieHellman(password,username);
 		//1.2 sending to the Server
-		byte[] result = port.login(docId, dh.sendClientParameters());
+		byte[] iv0 = CipherFunctions.ivGenerator();
+		byte[] result = port.login(docId, dh.sendClientParameters(iv0), iv0);
 		//1.3 generating  session key		
-		App.key =dh.receiveServerParameters(result);
+		App.key =dh.receiveServerParameters(result, iv0);
 		System.out.println("KeyAgreed: " + printBase64Binary(App.key.getEncoded()));
 		//1.4 creating challenge
-		byte[] result1= port.sendChallenge(docId, dh.sentClientChallenge());
+		byte[] iv1 = CipherFunctions.ivGenerator();
+		byte[] result1= port.sendChallenge(docId, dh.sentClientChallenge(iv1), iv1);
 		//check challenge
-		result2 = port.checkChallenge(docId, dh.checkChallenge(result1));
+		result2 = port.checkChallenge(docId, dh.checkChallenge(result1,iv1), iv1);
 	    }catch (Exception e){
 	    	System.out.println(e.getMessage());
 	    	functions.writeToScreen("\nIdUtilizador ou palavra-passe errados!\n");

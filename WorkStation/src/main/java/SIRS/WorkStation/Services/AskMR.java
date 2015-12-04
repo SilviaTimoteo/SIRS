@@ -67,17 +67,17 @@ public class AskMR {
 					rDoc = request.setPatient(rDoc, patient);
 					rDoc = request.setDoctor(rDoc, user);
 					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
-			 		
-					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
+			 		byte[] iv0 = CipherFunctions.ivGenerator();
+					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key,iv0);
 					try{
-						result = port.getRegistries(docId, docCipher);
+						result = port.getRegistries(docId, docCipher,iv0);
 					}
 					catch(Exception e){
 						System.out.println(e.getMessage());
 						return true; 
 					}	 		
 			 		
-			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key,iv0)));
 			 		
 					functions.writeToScreen(toReturn);
 			
@@ -103,17 +103,17 @@ public class AskMR {
 					rDoc = request.setSpeciality(rDoc, functions.getSpeciality(speciality));
 					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 					
-					
-					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
+			 		byte[] iv1 = CipherFunctions.ivGenerator();
+					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key, iv1);
 					try{
-						result = port.getRegistryByDate(docId, docCipher);
+						result = port.getRegistryByDate(docId, docCipher, iv1);
 					}
 					catch(Exception e){
 						System.out.println(e.getMessage());
 						return true; 
 					}
 			 		
-			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key,iv1)));
 			 		
 					functions.writeToScreen(toReturn);
 					
@@ -137,16 +137,16 @@ public class AskMR {
 					rDoc = request.setDate(rDoc, data);
 					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 					rDoc = request.setBeforeAfter(rDoc, "B");
-					
-					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
+			 		byte[] iv2 = CipherFunctions.ivGenerator();
+					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key,iv2);
 					try{
-						result = port.getRegistryByDate(docId, docCipher);
+						result = port.getRegistryByDate(docId, docCipher, iv2);
 					}
 					catch(Exception e){
 						System.out.println(e.getMessage());
 						return true; 
 					}
-			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key, iv2)));
 			 		
 					functions.writeToScreen(toReturn);
 					
@@ -171,10 +171,11 @@ public class AskMR {
 					rDoc = request.setTimestamp(rDoc, functions.getCurrentTime());
 					rDoc = request.setBeforeAfter(rDoc, "A");
 					
-					
-					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key);
+			 		byte[] iv3 = CipherFunctions.ivGenerator();
+
+					docCipher = CipherFunctions.cipher(FunctionsXML.XMLtoBytes(rDoc), App.key, iv3);
 					try{
-						result = port.getRegistryByDate(docId, docCipher);
+						result = port.getRegistryByDate(docId, docCipher, iv3);
 					}
 					catch(Exception e){
 						System.out.println(e.getMessage());
@@ -182,7 +183,7 @@ public class AskMR {
 					}
 			 		
 			 		
-			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key)));
+			 		toReturn = (new RequestsXML()).getEntry(FunctionsXML.BytesToXML(CipherFunctions.decipher(result, App.key, iv3)));
 			 		
 					functions.writeToScreen(toReturn);
 					

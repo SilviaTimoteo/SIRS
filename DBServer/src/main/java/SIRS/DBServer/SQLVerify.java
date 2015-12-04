@@ -46,9 +46,8 @@ public class SQLVerify {
 		//if(doctorExists(doctorId) && patientExists(patient) && isDoctorOfPatient(doctorId, patient) && doctorHasSpeciality(doctorId, speciality) && validTimestamp(timestamp)){
 		doctorExists(doctorId);
 		patientExists(patient);
-		isDoctorOfPatient(doctorId, patient);
 		doctorHasSpeciality(doctorId, speciality);
-		doctorInEmergency(doctorId);
+		isDoctorOfPatient(doctorId, patient);
 		validTimestamp(timestamp);
 		
 		answer = SQLthings.BDgetRegsBySpeciality(patient, speciality);

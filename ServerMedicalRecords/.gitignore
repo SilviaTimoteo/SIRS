@@ -68,3 +68,7 @@ buildNumber.properties
 hs_err_pid*
 
 /derby.log
+<<<<<<< HEAD
+/pom.xml
+=======
+>>>>>>> branch 'master' of https://github.com/SilviaTimoteo/SIRS.git

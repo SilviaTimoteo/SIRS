@@ -20,4 +20,5 @@ public interface Server {
 	 @WebMethod byte[] addRegistryReq(int userID, byte[] message, byte[] iv)throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp;
 	 @WebMethod byte[] logout(int userID);
 }
+
  

@@ -14,10 +14,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mainclass>SIRS.WorkStation.App</mainclass>
 
-	<uddi.url>http://194.210.230.40:8080</uddi.url>
+	<uddi.url>http://192.168.0.102:8080</uddi.url>
     <ws.name>Server</ws.name>
 
-    <ws.url>http://194.210.230.40:8081/server-ws/endpoint</ws.url>
+    <ws.url>http://192.168.0.102:8081/server-ws/endpoint</ws.url>
     <wsdl.url>${ws.url}?WSDL</wsdl.url> 
   </properties>
 

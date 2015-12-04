@@ -24,10 +24,10 @@ public class Options {
 	public boolean showOptions(){ 
 		functions.writeToScreen("\n\n[WORKSTATION]\n\n");
 
-		functions.writeToScreen("Escolha uma das opções:\n");
-		functions.writeToScreen("1) Pedir registo médico\n");
-		functions.writeToScreen("2) Adicionar registo médico\n");
-		functions.writeToScreen("0) Terminar sessão\n");
+		functions.writeToScreen("Choose one of the options:\n");
+		functions.writeToScreen("1) Medical records query\n");
+		functions.writeToScreen("2) Add medical record\n");
+		functions.writeToScreen("0) Logout\n");
 		
 		try{
 		option = input.nextInt();
@@ -52,14 +52,14 @@ public class Options {
 		 	case 0:
 				port.logout(docId);
 		 		App.key = null;
-		 		functions.writeToScreen("\n\nTerminando sessão...\n\n");
+		 		functions.writeToScreen("\n\nLogging out...\n\n");
 				try{
 		 		App.clearScreen();
 				}catch(Exception ignore){}
 				
 				return false;
 			default:
-				functions.writeToScreen("\n Opção inválida!\n");
+				functions.writeToScreen("\n Invalid option!\n");
 
 
 		}

@@ -40,24 +40,24 @@ public class AddMR {
 	
 	public boolean showOptions() {
 		
-		functions.writeToScreen("\n\n  [Adição de registo]\n\n");
+		functions.writeToScreen("\n\n  [Add medical record]\n\n");
 		while(speciality == -1){
 	 		speciality = functions.showSpecialities();
 	 	}
  		if(speciality == 0){
  			return false;
  		}
-	 	functions.writeToScreen("Nome do paciente: ");
+	 	functions.writeToScreen("Patient's name: ");
 		patient = input.nextLine();
 		
-	 	functions.writeToScreen("Entrada do registo: ");
+	 	functions.writeToScreen("Medical record entry: ");
 		entry = input.nextLine();
 		while(invalid){
-			functions.writeToScreen("Deseja cancelar (prima n) ou enviar (prima y)?");
+			functions.writeToScreen("Do you want to cancel (press n) or send (press y)?");
 			op = input.nextLine();
 			if(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("n")) invalid=false;
 			else{ 
-				functions.writeToScreen("OPÇÃO INVÁLIDA\n");
+				functions.writeToScreen("Invalid option!\n");
 				invalid = true;
 			}
 		}

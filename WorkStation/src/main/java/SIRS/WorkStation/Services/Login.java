@@ -38,16 +38,17 @@ public class Login {
 	public boolean login() throws DoctorDoesntExist{
 		functions.writeToScreen("\n\n\nLogin\n");
 		
-		functions.writeToScreen("\nIdUtilizador: ");
+		functions.writeToScreen("\nUserId: ");
 		username = input.readLine();
 		
-		functions.writeToScreen("Palavra-passe: ");
+		functions.writeToScreen("Password: ");
 	    password = String.valueOf(input.readPassword());
 	    
 	    try{
 	    	docId = Integer.parseInt(username); 
-	    }catch (NumberFormatException e){
-	    	throw new DoctorDoesntExist();
+	    }catch (NumberFormatException E){
+	    	System.out.println(new DoctorDoesntExist().getMessage());
+	    	return false;
 	    }
 	    try{
 		//1- establishing a session key with ServerDB
@@ -65,17 +66,17 @@ public class Login {
 		result2 = port.checkChallenge(docId, dh.checkChallenge(result1,iv1), iv1);
 	    }catch (Exception e){
 	    	System.out.println(e.getMessage());
-	    	functions.writeToScreen("\nIdUtilizador ou palavra-passe errados!\n");
+	    	functions.writeToScreen("\nWrong UserId or password!\n");
 	    	return false;
 	    }
 		
 		try {
 			if((new String(result2, "UTF-8").equalsIgnoreCase("authentication successful"))){
-				functions.writeToScreen("\nLogin bem sucedido\n");
+				functions.writeToScreen("\nSuccessful login!\n");
 				return true;
 			}
 			else{
-				functions.writeToScreen("\nIdUtilizador ou palavra-passe errados!\n");
+				functions.writeToScreen("\nWrong UserId or password!\n");
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

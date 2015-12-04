@@ -21,6 +21,7 @@ import SIRS.exceptions.DoctorSpecialty;
 import SIRS.exceptions.EmergencyDoctor;
 import SIRS.exceptions.InvalidTimestamp;
 import SIRS.exceptions.PatientDoesntExist;
+import SIRS.exceptions.UserIsAlreadyInSession;
 import sirs.ws.*;
 
 import java.util.Arrays;
@@ -36,9 +37,13 @@ public class ServerImpl implements Server {
 	Map<String,Key>  mapKeys = new HashMap<String,Key>();
 	Map<String,byte[]> mapChallenge = new HashMap<String,byte[]>();
 	
-	public byte[] login(int userID, byte[] message, byte[] iv) throws DoctorDoesntExist {
+	public byte[] login(int userID, byte[] message, byte[] iv) throws DoctorDoesntExist, UserIsAlreadyInSession {
 		try
 		{
+			if(mapKeys.keySet().contains(Integer.toString(userID))){
+				
+				throw new UserIsAlreadyInSession();
+			}
 			byte[] result = port.generateSessionKeyDoctor(userID, message, iv);//to ServerDB
 			Document doc = FunctionsXML.BytesToXML(result);
 			ConnectionXML conn = new ConnectionXML();

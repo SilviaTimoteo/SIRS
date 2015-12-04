@@ -41,13 +41,13 @@ public class AskMR {
 	}
 	
 	public boolean showOptions(){ 
-			functions.writeToScreen("\n [Pedido de Registo]\n\n");
-			functions.writeToScreen("Escolha uma das opções:\n\n");
-			functions.writeToScreen("1) Todos os registos\n");
-			functions.writeToScreen("2) Por especialidade\n");
-			functions.writeToScreen("3) Antes da data X\n");
-			functions.writeToScreen("4) Depois da data X\n");
-			functions.writeToScreen("0) Voltar atrás\n");
+			functions.writeToScreen("\n [Medical Records Query]\n\n");
+			functions.writeToScreen("Choose one of the options:\n\n");
+			functions.writeToScreen("1) All records\n");
+			functions.writeToScreen("2) By specialty\n");
+			functions.writeToScreen("3) Before date X\n");
+			functions.writeToScreen("4) After date X\n");
+			functions.writeToScreen("0) Go back\n");
 	
 			try{
 			option = input.nextInt();
@@ -57,10 +57,10 @@ public class AskMR {
 			}
 			switch(option){
 			 	case 1:
-					functions.writeToScreen("\n [Pedido de Registo]\n");
+					functions.writeToScreen("\n [Medical Records Query]\n");
 
-			 		functions.writeToScreen("\n  [Todos os registos]\n\n");
-			 		functions.writeToScreen("Nome do paciente: ");
+			 		functions.writeToScreen("\n  [All records]\n\n");
+			 		functions.writeToScreen("Patient's name: ");
 			 		patient = input.nextLine();
 			 		
 			 		rDoc = request.createDoc();
@@ -85,16 +85,16 @@ public class AskMR {
 
 					break;
 			 	case 2:
-					functions.writeToScreen("\n [Pedido de Registo]\n");
+					functions.writeToScreen("\n [Medical Records Query]\n");
 
-					functions.writeToScreen("\n  [Por especialidade]\n\n");
+					functions.writeToScreen("\n  [By specialty]\n\n");
 					while(speciality == -1){
 				 		speciality = functions.showSpecialities();
 				 	}
 			 		if(speciality == 0){
 			 			return true;
 			 		}
-				 	functions.writeToScreen("Nome do paciente: ");
+				 	functions.writeToScreen("Patient's name: ");
 					patient = input.nextLine();
 					
 					rDoc = request.createDoc();
@@ -121,14 +121,14 @@ public class AskMR {
 
 					break;
 			 	case 3:
-					functions.writeToScreen("\n [Pedido de Registo]\n");
+					functions.writeToScreen("\n [Medical Records Query]\n");
 
-			 		functions.writeToScreen("\n  [Antes da data X]\n\n");
+			 		functions.writeToScreen("\n  [Before date X]\n\n");
 					while(data==null){
-						functions.writeToScreen("Insira a data (aaaa/MM/dd):\n");
+						functions.writeToScreen("Insert date (yyyy-MM-dd):\n");
 						data = functions.getDate();
 					}
-				 	functions.writeToScreen("Nome do paciente: ");
+				 	functions.writeToScreen("Patient's name: ");
 					patient = input.nextLine();
 					
 					rDoc = request.createDoc();
@@ -154,14 +154,14 @@ public class AskMR {
 					
 					break;
 			 	case 4:
-					functions.writeToScreen("\n [Pedido de Registo]\n");
+					functions.writeToScreen("\n [Medical Records Query]\n");
 
-			 		functions.writeToScreen("\n  [Depois da data X]\n\n");
+			 		functions.writeToScreen("\n  [After date X]\n\n");
 					while(data==null){
-				 		functions.writeToScreen("Insira a data (dd/MM/aaaa): ");
+				 		functions.writeToScreen("Insert date (yyyy-MM-dd): ");
 						data = functions.getDate();
 					}
-				 	functions.writeToScreen("Nome do paciente: ");
+				 	functions.writeToScreen("Patient's name: ");
 					patient = input.nextLine();
 					
 					rDoc = request.createDoc();
@@ -194,7 +194,7 @@ public class AskMR {
 
 					break;
 				default:
-					functions.writeToScreen("\n Opção inválida!\n");
+					functions.writeToScreen("\n Invalid option!\n");
 					
 					return true;
 			}

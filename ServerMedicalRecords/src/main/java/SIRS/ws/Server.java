@@ -8,10 +8,11 @@ import SIRS.exceptions.DoctorSpecialty;
 import SIRS.exceptions.EmergencyDoctor;
 import SIRS.exceptions.InvalidTimestamp;
 import SIRS.exceptions.PatientDoesntExist;
+import SIRS.exceptions.UserIsAlreadyInSession;
 
 @WebService
 public interface Server {
-	 @WebMethod byte[] login(int userID, byte[] message,byte[] iv) throws DoctorDoesntExist;
+	 @WebMethod byte[] login(int userID, byte[] message,byte[] iv) throws DoctorDoesntExist, UserIsAlreadyInSession;
 	 @WebMethod byte[] getRegistries(int userID, byte[] message, byte[] iv) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp;
 	 @WebMethod byte[] getRegistryByDate(int userID, byte[] message, byte[] iv) throws  DoctorDoesntExist, PatientDoesntExist, EmergencyDoctor, InvalidTimestamp;
 	 @WebMethod byte[] getRegistryBySpeciality(int userID, byte[] message, byte[] iv) throws DoctorDoesntExist, PatientDoesntExist, DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp ;

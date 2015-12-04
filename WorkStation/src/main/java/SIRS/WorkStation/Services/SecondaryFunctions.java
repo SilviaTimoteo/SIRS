@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class SecondaryFunctions {
-	List<String> specialities = Arrays.asList("Cardiologia", "Neurologia", "Ortopedia");
+	List<String> specialities = Arrays.asList("Cardiology", "Neurology", "Orthopedics");
 	
 	public void writeToScreen(String output){
 		System.out.print(output);
@@ -25,11 +25,11 @@ public class SecondaryFunctions {
 		Scanner input = new Scanner(System.in);
 
 		
-		writeToScreen("Escolha uma especialidade:\n\n");
+		writeToScreen("Choose one specialty:\n\n");
 		writeToScreen("1)" +specialities.get(0)+ "\n");
 		writeToScreen("2)" +specialities.get(1)+ "\n");
 		writeToScreen("3)" +specialities.get(2)+ "\n");
-		writeToScreen("0) Voltar atrás\n");
+		writeToScreen("0) Go back\n");
 
 		try{
 			op = input.nextInt();
@@ -39,7 +39,7 @@ public class SecondaryFunctions {
 			op = -1;
 		}
 		if(op<0 || op > numberOfSpecialities){
-			writeToScreen("\n Opção inválida!\n");
+			writeToScreen("\n Invalid option!\n");
 			op = -1;
 		}
 		
@@ -50,25 +50,25 @@ public class SecondaryFunctions {
 	
 	public String getDate(){
 		Calendar cal = Calendar.getInstance();
-		DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Scanner input = new Scanner(System.in);
 		Date date = null;
 		try {
 			date = format.parse(input.next());
 		} catch (ParseException e) {
-			writeToScreen("\n Formato inválido da data\n");
+			writeToScreen("\n Invalid date format\n");
 			
 			return null;
 		}
 		
 		if(date.after(cal.getTime())){
-			writeToScreen("\n Data inválida\n");
+			writeToScreen("\n Invalid date\n");
 			return null;
 		}
 		cal.setTime(date);
 		
 		if((cal.get(Calendar.DAY_OF_MONTH)>31 && cal.get(Calendar.MONTH)>12)){
-			writeToScreen("\n Data inválida\n");
+			writeToScreen("\n Invalid date\n");
 			return null;
 		}
 		

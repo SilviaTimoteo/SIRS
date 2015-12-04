@@ -75,7 +75,7 @@ public class SQLVerify {
 	public static void verifyAddReg(String patient, String doctorId, String speciality, String entry, String date, String timestamp)
 		throws DoctorDoesntExist, PatientDoesntExist,  DoctorNotOfPatient, DoctorSpecialty, InvalidTimestamp {
 		//if(doctorExists(doctorId) && patientExists(patient) && isDoctorOfPatient(doctorId, patient) && doctorHasSpeciality(doctorId, speciality) && validTimestamp(timestamp)){
-		
+		System.out.println("VerifyAddReg: Entrei ");
 		doctorExists(doctorId);
 		patientExists(patient);
 		isDoctorOfPatient(doctorId, patient);

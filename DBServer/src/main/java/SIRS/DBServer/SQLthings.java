@@ -198,7 +198,7 @@ public class SQLthings {
 	}
 
 	public static void BDaddReg(String patient, String REGdate, String doctor, String speciality, String entry){
-		
+		System.out.println("BDaddReg: Entrei \n");
 		Connection conn=null;
 		Statement stmt=null;
 		ResultSet res=null;

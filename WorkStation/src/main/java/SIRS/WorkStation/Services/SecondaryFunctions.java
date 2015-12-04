@@ -77,7 +77,7 @@ public class SecondaryFunctions {
 	
 	public String getCurrentDate(){
 		Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String date = sdf.format(cal.getTime());
         return date;  
 	}

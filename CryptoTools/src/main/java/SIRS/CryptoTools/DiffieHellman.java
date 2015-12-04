@@ -127,9 +127,9 @@ public  class DiffieHellman {
 	}
 	
 	
-	public byte[] sendClientParameters(){
+	public byte[] sendClientParameters(byte[] iv){
 		this.clientGenerateParams();
-		byte[] cipherPublic = CipherFunctions.cipher(this.publicParamsClient.getEncoded(), this.sharekey);
+		byte[] cipherPublic = CipherFunctions.cipher(this.publicParamsClient.getEncoded(), this.sharekey, iv);
 		ConnectionXML connXML = new ConnectionXML();
 		Document doc = connXML.createDoc();
 		doc=connXML.setId(doc, this.clientID);
@@ -137,30 +137,30 @@ public  class DiffieHellman {
 		return FunctionsXML.XMLtoBytes(doc);
 	}
 	
-	public Key receiveServerParameters(byte[] result){
+	public Key receiveServerParameters(byte[] result, byte[] iv){
 		Document doc  = FunctionsXML.BytesToXML(result);
-		byte[] keyBytes= CipherFunctions.decipher(parseBase64Binary(new ConnectionXML().getMessage(doc)),this.sharekey);
+		byte[] keyBytes= CipherFunctions.decipher(parseBase64Binary(new ConnectionXML().getMessage(doc)),this.sharekey,iv);
 		PublicKey key = CipherFunctions.generatePublicKeyFromBytes(keyBytes);
 		this.keyAgreed =this.clientGenerateKey(key);
 		System.out.println(printBase64Binary(this.keyAgreed.getEncoded()));
 		return this.keyAgreed;
 	}
 	
-	public byte[] sentClientChallenge(){
+	public byte[] sentClientChallenge(byte[] iv ){
 		this.clientChallenge = CipherFunctions.SecureRandomNumber() ;
 		System.out.println("C1 -> sent: " + printBase64Binary(this.clientChallenge));
-		byte[] challengeCiphered = CipherFunctions.cipher(this.clientChallenge,this.keyAgreed);
+		byte[] challengeCiphered = CipherFunctions.cipher(this.clientChallenge,this.keyAgreed, iv);
 		ConnectionXML connXML1 = new ConnectionXML();
 		Document doc = connXML1.createDoc();
 		doc = connXML1.setC1(doc,printBase64Binary(challengeCiphered));
 		return 	FunctionsXML.XMLtoBytes(doc);	
 	}
 	
-	public byte[] checkChallenge(byte[] result){
+	public byte[] checkChallenge(byte[] result, byte[] iv){
 		Document doc  = FunctionsXML.BytesToXML(result);
 		ConnectionXML connXML1 = new ConnectionXML();
 		String message = null;
-		byte[] c1Received =CipherFunctions.decipher(parseBase64Binary(connXML1.getC1(doc)), this.keyAgreed);
+		byte[] c1Received =CipherFunctions.decipher(parseBase64Binary(connXML1.getC1(doc)), this.keyAgreed, iv);
 		System.out.println("C1 -> received: " + printBase64Binary(c1Received));
 		
 		if(Arrays.equals(this.clientChallenge,c1Received)){

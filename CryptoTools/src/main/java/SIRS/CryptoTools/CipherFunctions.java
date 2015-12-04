@@ -19,6 +19,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.Random;
+
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 public class CipherFunctions {
@@ -30,12 +32,12 @@ public class CipherFunctions {
 	 * @param key
 	 * @return cipher text
 	 */
-	public static byte[] cipher(byte[] mensagem, Key key){
+	public static byte[] cipher(byte[] mensagem, Key key, byte[] iv){
 		byte[] output = null;
 		
 		try{
-	        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, key);
+	        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv) );
 			output=new byte[cipher.getOutputSize(mensagem.length)];
 			 int outputLen=cipher.update(mensagem,0,mensagem.length,output,0);
 			 cipher.doFinal(output,outputLen);
@@ -51,13 +53,13 @@ public class CipherFunctions {
 	 * @param key
 	 * @return  PlainText
 	 */
-	public static byte[] decipher(byte[] mensagemCifrada, Key key){
+	public static byte[] decipher(byte[] mensagemCifrada, Key key, byte[] iv){
 		byte[] newPlainBytes=null;
 		byte[] cipherBytes = null;
 	
 		try{
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, key);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 			newPlainBytes = cipher.doFinal(mensagemCifrada);
 	       
 		}
@@ -65,6 +67,11 @@ public class CipherFunctions {
 			e.printStackTrace();
 		}
 		 return newPlainBytes;
+	}
+	public static byte[] ivGenerator(){
+		byte[] b = new byte[16];
+        new Random().nextBytes(b);
+        return b;
 	}
 	
 //------------------------Function to assymetricsKeys------------------------------------

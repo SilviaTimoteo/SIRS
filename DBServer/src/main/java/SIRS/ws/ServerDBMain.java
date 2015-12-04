@@ -13,20 +13,15 @@ import SIRS.ws.uddi.UDDINaming;
 public class ServerDBMain {
 	
 	public static void main(String[] args) {
-//		try{
-//			String result =	SQLVerify.verifyAllReg("Carla Josefina", "10001", "13:06:00");
-//			RequestsXML req = new RequestsXML();
-//			Document doc = req.createDoc();
-//			doc = req.setEntry(doc, result);
-//			byte [] bd = FunctionsXML.XMLtoBytes(doc);
-//			Document novo = FunctionsXML.BytesToXML(bd);
-//			String cenas = req.getEntry(novo);
-//			System.out.println(cenas);		
-//		}catch (Exception e){
-//			System.out.println(e.getMessage());
-//		}
 
-	  if (args.length < 3) {
+		System.out.println(SQLthings.BDgetAllRegs("Carla Josefina"));
+
+		SQLthings.BDaddReg("Carla Josefina", "2015/09/09 15:55:04", "10001", "Neurologia", "epa isto funciona?");
+		System.out.println(SQLthings.BDgetAllRegs("Carla Josefina"));
+		
+		
+
+/*	  if (args.length < 3) {
             System.err.println("Argument(s) missing!");
             System.err.printf("Usage: java %s uddiURL wsName wsURL%n", ServerDBMain.class.getName());
             return;
@@ -81,7 +76,7 @@ public class ServerDBMain {
             } catch (Exception e) {
                 System.out.printf("Caught exception when deleting: %s%n", e);
             }
-        }
+        }*/
 
 	}
 }

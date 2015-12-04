@@ -139,6 +139,10 @@ public class ServerImplDB implements ServerDB{
 			String doctor = reqXML.getDoctor(doc);
 			String timestamp = reqXML.getTimestamp(doc);
 			String specialty = reqXML.getSpeciality(doc);
+			System.out.println("LOLOLOL");
+
+			System.out.println(specialty);
+			System.out.println("LOLOLOLOL");
 			
 			// Verificar se o medico tem acesso aos registos => POLICIES
 			// FALTA TRY CATCH!!!!!!!!!!!!!!!!!!
